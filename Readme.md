@@ -1,1 +1,0 @@
-# Examining citation and co-authorship networks in the PubMed Central open access journal repository

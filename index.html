@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Citation Explorer</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/grayscale.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">
+                    <!--  <i class="fa fa-play-circle"></i>  <span class="light">Start</span> Bootstrap-->
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#process">The Process</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#results">Results</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#livedemo">Live Demo</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Header -->
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h1 class="brand-heading" style="font-size: 100px">Citation Explorer</h1>
+                        <p class="intro-text">Deciphering the social networks of human knowledge</p>
+                        <a href="#about" class="btn btn-circle page-scroll">
+                            <i class="fa fa-angle-double-down animated"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="container content-section text-center">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>About Citation Explorer</h2>
+                <p>Citation Explorer was created to better understand the citation networks and co-authorship networks that underlie human knowledge. </p>
+                <p>By pulling in the full set of open access publications from PubMed Central, we are able to examine both interesting global statistics (such as average citation patterns, self cites, and typical co-authorship networks).</p>
+                <p>For individual papers and authors, I've created a tool which allows the user to dynamically generate a publication summary, graphical citation network, and suggested keywords based on the data available in SQL. Additionally, by clicking an author's name, the user can view per-author statistics, comparing them to global averages, and can view a graphical network of all of the author's collaborators to two degrees.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="container content-section text-center">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>The Process</h2>
+                <h3>Step 1: Scraping, parsing and munging</h3>
+                <p>3.5 million full text articles collected from PubMed Central, saved using gzip to keep data size manageable. Then, using a parser created primarily using Beautiful Soup, data is read from each article and stored into SQL tables, keying the data against the PMIDs which uniquely identify the articles.</p>
+                <img src="img/sqltables-fig.png" alt="SQL tables"  style = "margin-bottom: 0.5cm">
+                <h3>Step 2: Suggested keyword generation (TF-IDF)</h3>
+                <p>The gensim python library was used to construct the TF-IDF model since the gensim library is able to process data chunk by chunk rather than all at once (the data set is far too large for scikit learn). Stopwords and words that only occurred once in a document were excluded from the analysis. After building the dictionary for the entire corpus, the model was run on each document and the top scoring words saved to a new SQL table for easy retrieval.</p>
+                <h3>Step 3: Citation and co-authorship network analysis</h3>
+                <p>The graph-tool python was used to construct two graph networks, since the networks are far too large to load into memory with a tool like NetworkX. 
+                <p>The directed citation graph network has nodes which represent publications and the directed edges which connect publications to the papers they cite. This network contains 7.7 million nodes and 31 million edges. This number is larger than the number of papers parsed (3.5M) because many citations are to publications which are not open access, therefore my parser creates a target node and edge linking to publications which are not contained in my dataset.</p>
+                <p>The undirected co-authorship graph network has nodes representing authors and edges indicating that they have appeared on a publication together. The network contains 2.4 million nodes and 210 million edges.</p>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results" class="content-section text-center">
+        <div class="results-section">
+            <div class="container">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <h2>Results</h2>
+                    <h3>Global Statistics</h3>
+                    <p>After generating the SQL tables of parsed data, it is interesting to begin exploring some of the global statistics. To begin with, I plotted histograms of the number of incoming citations and outgoing citations for every publication:</p>
+                    <div style="display:inline-block; width:800px; height:400px; position: relative; left: -55px">
+                        <div style = "float: left; width:380px;">
+                            <img src = "img/incites.svg" alt = "In Citations" style="width:380px"/>
+                            <p style="font-size : 120%;">Incoming Citations: These follow the expected trend, peaking at 0 and tailing off towards higher numbers of citations</p>
+                        </div>
+                        <div style = "float: right; width:380px;">
+                            <img src = "img/outcites.svg" alt = "Out Citations" style="width:380px"/>
+                            <p style="font-size : 120%;">Outgoing Citations: As expected, there is a peak with the most common number of citations (~25), tailing off in either direction</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Demo Section -->
+    <section id="livedemo" class="content-section text-center">
+        <div class="livedemo-section">
+            <div class="container">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <h2>Live Demo</h2>
+                    <p>You can dynamically generate paper citation networks, co-authorship networks and suggested keywords here:</p>
+                    <a href="http://citationexplorer.hoppmann.me:5000" class="btn btn-default btn-lg">Live Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="container content-section text-center">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Contact</h2>
+                <p><a href="mailto:eric@hoppmann.me">eric@hoppmann.me</a>
+                </p>
+                <ul class="list-inline banner-social-buttons">
+                    <li>
+                        <a href="https://github.com/eric11" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>Copyright &copy; Eric Hoppmann 2016</p>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="js/jquery.easing.min.js"></script>
+
+    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/grayscale.js"></script>
+
+</body>
+
+</html>
