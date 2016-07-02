@@ -17,12 +17,12 @@ print len(fileslist)
 import sqlite3
 conn = sqlite3.connect('pmcv1.db')
 c = conn.cursor()
-c.execute('''CREATE TABLE refs (pmid integer, refpmid integer)''')
-c.execute('''CREATE TABLE pmcidmap (pmid integer, pmcid integer)''')
-c.execute('''CREATE TABLE meta (pmid integer, title text, journal_id text)''')
-c.execute('''CREATE TABLE authors (pmid integer, authnum integer, fn text, ln text, afil text)''')
-c.execute('''CREATE TABLE keywords (pmid integer, keyword text)''')
-c.execute('''CREATE TABLE abstracts (pmid integer, abstract text)''')
+c.execute('''CREATE TABLE refs (pmid integer, refpmid integer, PRIMARY KEY (pmid))''')
+c.execute('''CREATE TABLE pmcidmap (pmid integer, pmcid integer, PRIMARY KEY (pmid))''')
+c.execute('''CREATE TABLE meta (pmid integer, title text, journal_id text, PRIMARY KEY (pmid))''')
+c.execute('''CREATE TABLE authors (pmid integer, authnum integer, fn text, ln text, afil text, PRIMARY KEY (pmid))''')
+c.execute('''CREATE TABLE keywords (pmid integer, keyword text, PRIMARY KEY (pmid))''')
+c.execute('''CREATE TABLE abstracts (pmid integer, abstract text, PRIMARY KEY (pmid))''')
 
 #import records
 totalrecordscount=0
