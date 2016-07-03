@@ -1,23 +1,40 @@
-import flask 
+import flask
+from flask import g
 import os
 import sqlite3
-from flask import g
 from io import BytesIO
 import base64
-import graph_tool.all as gt
 import Queue
 import random
+import networkx as nx
+from networkx.readwrite import json_graph
+import json
+import struct
+import colorbrewer
 
-DATABASE = '../pmcv1-full.db'
+DBfull = 'db/pmcv1-full.db'
+DBgraph = 'db/pmcv1-graph.db'
 
-def get_db():
+def get_db_full():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
+        db = g._dbfull = sqlite3.connect(DBfull)
     return db
 
-def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
+def get_db_graph():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._dbgraph = sqlite3.connect(DBgraph)
+    return db
+
+def query_db_full(query, args=(), one=False):
+    cur = get_db_full().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
+
+def query_db_graph(query, args=(), one=False):
+    cur = get_db_graph().execute(query, args)
     rv = cur.fetchall()
     cur.close()
     return (rv[0] if rv else None) if one else rv
@@ -30,136 +47,82 @@ def getitem(obj, item, default):
     else:
         return obj[item]
 
-import cPickle as pickle
-#g = pickle.load(open("../full_graph.p", "rb"))
-g = gt.load_graph("../full_graph.gt")
-pmid_vertex_dict = pickle.load(open("../full_graph_pmid_vertex_dict.p", "rb"))
-rev_pmid_vertex_dict = {v: k for k, v in pmid_vertex_dict.items()}
-randpmids = pickle.load(open("../random_choice_pmids.p", "rb"))
-#g = pickle.load(open("authors_full_graph.p", "rb"))
-gauth = gt.load_graph("../authors_full_graph.gt")
-author_vertex_dict = pickle.load(open("../authors_vertex_dict.p", "rb"))
-author_full_name_dict = pickle.load(open("../authors_full_name_dict.p", "rb"))
-rev_author_vertex_dict = {v: k for k, v in author_vertex_dict.items()}
-
-def addedge(graphobject, source, dest, vertexdict):
-    if source not in vertexdict:
-        v = graphobject.add_vertex()
-        vertexdict[source] = int(v)
-    if dest not in vertexdict:
-        v = graphobject.add_vertex()
-        vertexdict[dest] = int(v)
-    graphobject.add_edge(vertexdict[source], vertexdict[dest])
-    return graphobject, vertexdict
-
-                
-def buildlocalgraph(rootnode, mastergraph, indepth = 0, outdepth = 2):
-    _g =gt.Graph()
-    _vertexdict = dict()
-    q = Queue.Queue()
-    #first go in out direction
-    q.put((rootnode, 0))
-    while not q.empty():
-        node = q.get()
-        if node[1] < outdepth:
-            try:
-                for neigh in mastergraph.vertex(node[0]).out_neighbours():
-                    _g, _vertexdict = addedge(_g, node[0], neigh, _vertexdict)
-                    q.put((neigh, node[1]+1))
-            except KeyError:
-                "{} degree node {} not in graph g".format(node[1], node[0])
-    #now go in in direction
-    q.put((rootnode, 0))
-    while not q.empty():
-        node = q.get()
-        if node[1] < indepth:
-            try:
-                for neigh in mastergraph.vertex(node[0]).in_neighbours():
-                    _g, _vertexdict = addedge(_g, neigh, node[0], _vertexdict)
-                    q.put((neigh, node[1]+1))
-            except KeyError:
-                "{} degree node {} not in graph g".format(node[1], node[0])
-    return _g, _vertexdict
-
-def addedgelabeledvertex(graphobject, source, dest, vertexdict, v_label):
-    if source not in vertexdict:
-        v = graphobject.add_vertex()
-        vertexdict[source] = int(v)
-        v_label[v] = str(rev_pmid_vertex_dict[dest])
-    if dest not in vertexdict:
-        v = graphobject.add_vertex()
-        vertexdict[dest] = int(v)
-        v_label[v] = str(rev_pmid_vertex_dict[dest])
-    graphobject.add_edge(vertexdict[source], vertexdict[dest])
-    return graphobject, vertexdict, v_label
-
-def buildlabeledlocalgraph(rootnode, mastergraph, indepth = 0, outdepth = 2):
-    _g =gt.Graph()
-    _vertexdict = dict()
-    q = Queue.Queue()
-    v_label = _g.new_vertex_property("string")
-    #first go in out direction
-    q.put((rootnode, 0))
-    while not q.empty():
-        node = q.get()
-        if node[1] < outdepth:
-            try:
-                for neigh in mastergraph.vertex(node[0]).out_neighbours():
-                    _g, _vertexdict, v_label = addedgelabeledvertex(_g, node[0], neigh, _vertexdict, v_label)
-                    q.put((neigh, node[1]+1))
-            except KeyError:
-                print "{} degree node {} not in graph g".format(node[1], node[0])
-    #now go in in direction
-    q.put((rootnode, 0))
-    while not q.empty():
-        node = q.get()
-        if node[1] < indepth:
-            try:
-                for neigh in mastergraph.vertex(node[0]).in_neighbours():
-                    _g, _vertexdict, v_label = addedgelabeledvertex(_g, neigh, node[0], _vertexdict, v_label)
-                    q.put((neigh, node[1]+1))
-            except KeyError:
-                "{} degree node {} not in graph g".format(node[1], node[0])
-    return _g, _vertexdict, v_label
-
-def authoraddedge(graphobject, source, dest, vertexdict, v_label):
-    if source not in vertexdict:
-        v = graphobject.add_vertex()
-        vertexdict[source] = int(v)
-        v_label[v] = str(author_full_name_dict[rev_author_vertex_dict[source]]).strip('()').strip("'").replace("u'", "").replace("',", "")
-    if dest not in vertexdict:
-        v = graphobject.add_vertex()
-        vertexdict[dest] = int(v) 
-        #author_full_name_dict[rev_author_vertex_dict[150083]]
-        v_label[v] = str(author_full_name_dict[rev_author_vertex_dict[dest]]).strip('()').strip("'").replace("u'", "").replace("',", "")
-    graphobject.add_edge(vertexdict[source], vertexdict[dest])
-    return graphobject, vertexdict, v_label
-
-def buildlocalgraphundirectedauthor(rootnode, mastergraph, depth, limit = 100):
-    _g =gt.Graph(directed = False)
-    _v_label = _g.new_vertex_property("string")
-    _vertexdict = dict()
+def buildfnauthortree(rootnode, mastergraphcursor, fndict, depth = 2):
+    _g =nx.DiGraph()
     q = Queue.Queue()
     q.put((rootnode, 0))
-    nodecount = 0
     while not q.empty():
         node = q.get()
         if node[1] < depth:
-            try:
-                for neigh in mastergraph.vertex(node[0]).all_neighbours():
-                    _g, _vertexdict, _v_label = authoraddedge(_g, node[0], neigh, _vertexdict, _v_label)
-                    q.put((neigh, node[1]+1))
-                    nodecount += 1
-                    if nodecount == limit: break
-            except KeyError:
-                "{} degree node {} not in graph g".format(node[1], node[0])
-        if nodecount == limit: break
-    return _g, _vertexdict, _v_label
+            mastergraphcursor.execute('''SELECT coauthors FROM coauthors WHERE author = ?''', [node[0]])
+            coauthors = cg.fetchone()[0].split(',')
+            for author in coauthors:
+                if unicode(fndict[author][0]+" "+fndict[author][1]) not in _g.nodes():
+                    _g.add_edge(unicode(fndict[node[0]][0]+ " "+fndict[node[0]][1]), 
+                                unicode(fndict[author][0]+" "+fndict[author][1]))
+                    q.put((author, node[1]+1))
+    return _g
 
-def countneigh(g, node):
-    count = 0
-    for neigh in g.vertex(node).all_neighbours(): count+= 1
-    return count
+def buildcitenetwork(rootnode, mastergraphcursor, authcursor, indepth = 0, outdepth = 2, 
+                     colorscheme = colorbrewer.RdBu):
+    _g =nx.DiGraph()
+    q = Queue.Queue()
+    #set up colors
+    _colors = colorscheme[max(outdepth,indepth)*2+1]
+    _colors.reverse()
+    #first go in out direction
+    q.put((rootnode, 0))
+    try:
+        lastname = authcursor('SELECT ln FROM authors WHERE pmid = ? AND authnum = 0', [rootnode], one=True)[0]
+    except TypeError:
+        lastname = rootnode
+    _g.add_node(rootnode, color = rgbtohex(_colors[(len(_colors)-1)/2]), ln = lastname)
+    while not q.empty():
+        node = q.get()
+        if node[1] < outdepth:
+            citestr = mastergraphcursor('SELECT outcites FROM cites WHERE pmid = ?', [node[0]], one=True)[0]
+            try:
+                cites = map(int, citestr.split(','))
+                for cite in cites:
+                    if cite not in _g.nodes():
+                        try:
+                            lastname = authcursor('SELECT ln FROM authors WHERE pmid = ? AND authnum = 0', [cite], one=True)[0]
+                        except TypeError:
+                            lastname = cite
+                        _g.add_node(cite, color = rgbtohex(_colors[(len(_colors)-1)/2+node[1]+1]), ln = lastname)
+                        _g.add_edge(node[0], cite)
+                        q.put((cite, node[1]+1))
+            except ValueError: #when there are none
+                pass
+    #now go in in direction
+    q.put((rootnode, 0))
+    while not q.empty():
+        node = q.get()
+        if node[1] < indepth:
+            citestr = mastergraphcursor('SELECT incites FROM cites WHERE pmid = ?', [node[0]], one=True)[0]
+            try:
+                cites = map(int, citestr.split(','))
+                for cite in cites:
+                    if cite not in _g.nodes():
+                        try:
+                            lastname = authcursor('SELECT ln FROM authors WHERE pmid = ? AND authnum = 0', [cite], one=True)[0]
+                        except TypeError:
+                            lastname = cite
+                        _g.add_node(cite, color = rgbtohex(_colors[(len(_colors)-1)/2-node[1]-1]), ln = lastname)
+                        _g.add_edge(cite, node[0])
+                        q.put((cite, node[1]+1))
+            except ValueError:
+                pass
+    return _g
+
+def rgbtohex(rgbtupleorlistoftuples):
+    if type(rgbtupleorlistoftuples) == list:
+        returnlist = []
+        for tup in rgbtupleorlistoftuples:
+            returnlist.append(struct.pack('BBB',*tup).encode('hex'))
+        return returnlist
+    else:
+        return struct.pack('BBB',*rgbtupleorlistoftuples).encode('hex')
 
 @app.route('/')
 def main():
@@ -167,54 +130,28 @@ def main():
 
 @app.route('/index')
 def index():
-    cur = get_db().cursor()
     args = flask.request.args
     randompmid = int(getitem(args, 'randompmid', '0'))
-    if randompmid == 1:
-        PMID = random.choice(randpmids) #21406116 #select random
+    if (randompmid == 1):
+        PMID = query_db_full('SELECT * FROM highlycitedpmids ORDER BY RANDOM() LIMIT 1',  one=True)[0]
     else:
         PMID = getitem(args, 'PMID', '')
-    #    PMID = int(getitem(args, 'PMID', '21406116'))
-    #AUTHOR = getitem(args, 'AUTHOR', '')
-    if (PMID != ''):
-        PMID = int(PMID)
-        #fetch title
-        meta = query_db('SELECT title, journal_id from meta WHERE pmid = ?', [PMID], one=True)
-        metastring = u"<br>Title: {} <br>Journal Abbreviation: {}".format(meta[0], meta[1])
-        authorsprint = unicode()
-        authors = query_db('SELECT fn, ln from authors WHERE pmid = ?', [PMID])
-        for i, author in enumerate(authors):
-            if i < len(authors)-1:
-                authorsprint = authorsprint + "<a href = " + flask.url_for('show_author', authname = author[0] + " " + author[1]) + " > " + author[0] + " " + author[1] + "</a>" + ", "
-            else:
-                #authorsprint = authorsprint + "and " + author[0] + " " + author[1]
-                authorsprint = authorsprint + "and " + "<a href = " + flask.url_for('show_author', authname = author[0] + " " + author[1]) + " > " + author[0] + " " + author[1] + "</a>"
-        
-        metastring = u"<br>Title: {} <br>Journal Abbreviation: {} <br>Authors: {}".format(meta[0], meta[1], authorsprint)
-
-        authorkeywords = query_db('SELECT keyword from keywords WHERE pmid = ?', [PMID])
-        tfidfkeywords = query_db('SELECT keywords from tfidf WHERE pmid = ?', [PMID])
-        tfidfkeywords = tfidfkeywords[0][0].replace(".", "").replace(",", "").replace(" ", ", ")
-        metastring += "<br>" + u"Author's Keywords: {} <br>TF-IDF top 5 keywords: {}".format(authorkeywords, tfidfkeywords)
-
-        # GRAPHING CITE NETWORK
-        citegraph, citevertexdict = buildlocalgraph(pmid_vertex_dict[PMID], g, 2,2)
-        deg = citegraph.degree_property_map("in") #would be better to color by distance from origin. easy to do with extra property
-        pos = gt.sfdp_layout(citegraph)
-        pngfigfile = BytesIO()
-        gt.graph_draw(citegraph, vertex_fill_color=deg, pos=pos, output_size=(600,600), 
-            fmt = 'png', output=pngfigfile)
-        pngfigfile.seek(0)
-        figdata_png = base64.b64encode(pngfigfile.getvalue())
-        #DONE
+    if PMID != '':
+        citegraph = buildcitenetwork(PMID, query_db_graph, query_db_full, 2, 2)
+        citenetwork = unicode(json.dumps(json_graph.node_link_data(citegraph, attrs={'source': 'source', 
+                                                                                     'target': 'target', 
+                                                                                     'key': 'key', 
+                                                                                     'id': 'name',
+                                                                                     'color': 'color',
+                                                                                     'ln': 'ln'
+                                                                      })))
     else:
-        figdata_png = ''
-        metastring = ''
-
+        citenetwork = ''
+    metastring = 'meta'
     html = flask.render_template(
         'index.html',
         PMID = PMID,
-        citefig = figdata_png,
+        JSONCITENETWORK = citenetwork,
         meta = metastring)
     return html
 
@@ -283,17 +220,19 @@ def show_author(authname):
         authfig = authfigdata_png)
     return html
     
-#@app.teardown_appcontext
-#def close_connection(exception):
-#    db = getattr(g, '_database', None)
-#    if db is not None:
-#        db.close()
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_dbfull', None)
+    if db is not None:
+        db.close()
+    db = getattr(g, '_dbgraph', None)
+    if db is not None:
+        db.close()
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     if port == 5000: 
-        #debug = True
-        debug = False
+        debug = True
     else:
         debug = False
     app.run(debug=debug,host='0.0.0.0',port=port)   
