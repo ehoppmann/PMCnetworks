@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Citation Network Map</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+		<div class="starter-template">
+		    <br>
+  			<p class="lead">Enter PMID Below</p>
+			<form name="pmid" method='GET'>
+			PMID: <input type="text" name="PMID">
+			<button type="submit">Go</button>
+			Or fetch a random article: <button type="submit" name="randompmid" value="1">Random</button>
+			</form>
+			{% if PMID != '' %}
+			PMID: {{ PMID|safe }}
+			{{ meta | safe }}
+			<br>
+			<img src="data:image/png;base64, {{ citefig | safe }}" alt="Incoming and outgoing citation network for selected paper (to two levels deep in each direction)" />
+			<div class="caption">Incoming and outgoing citation network for selected paper (to two levels deep in each direction)</div>
+			{% endif %}
+		</div>
+		</div>
+	</body>
+</html>
