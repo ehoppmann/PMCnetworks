@@ -27,7 +27,7 @@ Thank you Christopher Gandrud!
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
 
-var diameter = 960;
+var diameter = 800;
 
 var tree = d3.layout.tree()
     .size([360, diameter / 2 - 120])
@@ -55,7 +55,7 @@ function redraw() {
             " scale(" + d3.event.scale + ")");
     }
 
-d3.json("testgraphdata.json", function(error, root) {
+d3.json("authortestdata.json", function(error, root) {
     if (error) throw error;
 
     var nodes = tree.nodes(root),
