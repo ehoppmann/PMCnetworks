@@ -6,13 +6,12 @@
 
 path.link {
   fill: none;
-  stroke: #666;
+  stroke: #ccc;
   stroke-width: 1.5px;
 }
 
 circle {
-  fill: #ccc;
-  stroke: #fff;
+  stroke: #4c4c4c;
   stroke-width: 1.5px;
 }
 
@@ -29,15 +28,15 @@ text {
 // get the data
 d3.json("citetestdata.json", function(json) {
 
-    var width = 600,
-        height = 600;
+    var width = 800,
+        height = 800;
 
     var force = d3.layout.force()
         .nodes(json.nodes)
         .links(json.links)
         .size([width, height])
-        .linkDistance(60)
-        .charge(-150)
+        .linkDistance(30)
+        .charge(-300)
         .on("tick", tick)
         .start();
 
@@ -55,6 +54,7 @@ d3.json("citetestdata.json", function(json) {
         .attr("refY", -1.5)
         .attr("markerWidth", 6)
         .attr("markerHeight", 6)
+        .attr("fill", "#4c4c4c")
         .attr("orient", "auto")
         .append("svg:path")
         .attr("d", "M0,-5L10,0L0,5");
@@ -92,7 +92,8 @@ d3.json("citetestdata.json", function(json) {
 
     // add the nodes
     node.append("circle")
-        .attr("r", 5);
+        .style("fill", function(d) { return d.color})
+        .attr("r", 6);
 
     // add the text 
     node.append("text")
@@ -123,7 +124,7 @@ d3.json("citetestdata.json", function(json) {
                 return "translate(" + d.x + "," + d.y + ")";
             });
     }
-
+   
     //action to take on mouseover
     function mouseover() {
             d3.select(this).select("circle").transition()
@@ -134,7 +135,7 @@ d3.json("citetestdata.json", function(json) {
                 .attr("dy", ".31em")
                 .style("stroke-width", ".5px")
                 .style("font", "20px serif")
-                .style("fill", "#007BE6")
+                .style("fill", "#000000")
                 .style("opacity", 1);
         }
     //action to take on mouseout
