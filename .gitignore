@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#pickled data
+*.p
+
+#SQL
+*.db
+
 # C extensions
 *.so
 
