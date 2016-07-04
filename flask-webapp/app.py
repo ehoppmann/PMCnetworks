@@ -58,7 +58,6 @@ def buildfnauthortree(rootnode, mastergraphcursor, fulldbcursor, depth = 2, maxe
         if node[0] < depth:
             coauthors = mastergraphcursor('SELECT coauthors FROM coauthors WHERE author = ?', 
                                           [node[1]], one = True)[0].split(',')
-            print coauthors
             for author in coauthors:
                 if lookupfn(author, fulldbcursor) not in _g.nodes():
                     _g.add_edge(lookupfn(node[1], fulldbcursor), lookupfn(author, fulldbcursor))
