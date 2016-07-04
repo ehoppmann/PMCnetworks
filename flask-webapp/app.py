@@ -5,6 +5,7 @@ import sqlite3
 from io import BytesIO
 import base64
 import Queue
+import heapq
 import random
 import networkx as nx
 from networkx.readwrite import json_graph
@@ -47,23 +48,32 @@ def getitem(obj, item, default):
     else:
         return obj[item]
 
-def buildfnauthortree(rootnode, mastergraphcursor, fulldbcursor, depth = 2):
+def buildfnauthortree(rootnode, mastergraphcursor, fulldbcursor, depth = 2, maxelements = 600):
     _g =nx.DiGraph()
-    q = Queue.Queue()
-    q.put((rootnode, 0))
-    while not q.empty():
-        node = q.get()
-        if node[1] < depth:
+    h = []
+    heapq.heappush(h, (0, rootnode))
+    nodes = 0
+    while h != []:
+        node = heapq.heappop(h)
+        if node[0] < depth:
             coauthors = mastergraphcursor('SELECT coauthors FROM coauthors WHERE author = ?', 
-                                          [node[0]], one = True)[0].split(',')
+                                          [node[1]], one = True)[0].split(',')
+            print coauthors
             for author in coauthors:
                 if lookupfn(author, fulldbcursor) not in _g.nodes():
-                    _g.add_edge(lookupfn(node[0], fulldbcursor), lookupfn(author, fulldbcursor))
-                    q.put((author, node[1]+1))
+                    _g.add_edge(lookupfn(node[1], fulldbcursor), lookupfn(author, fulldbcursor))
+                    heapq.heappush(h, (node[0]+1, author))
+                    nodes += 1
+        if nodes > maxelements:
+            return buildfnauthortree(rootnode, mastergraphcursor, fulldbcursor, depth-1, maxelements)
     return _g
 
 def lookupfn(shortname, fulldbcursor):
-    return fulldbcursor('SELECT authorfn FROM authorfndict WHERE authorabbr = ?', [shortname], one=True)[0]
+    try: 
+        fn = fulldbcursor('SELECT authorfn FROM authorfndict WHERE authorabbr = ?', [shortname], one=True)[0]
+    except TypeError:
+        fn = shortname
+    return fn
 
 def buildcitenetwork(rootnode, mastergraphcursor, authcursor, indepth = 0, outdepth = 2, 
                      colorscheme = colorbrewer.RdBu):
