@@ -1,5 +1,5 @@
 import flask
-from flask import g
+from flask import g, send_from_directory
 import os
 import sqlite3
 from io import BytesIO
@@ -39,7 +39,7 @@ def query_db_graph(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_url_path='')
 
 def getitem(obj, item, default):
     if item not in obj:
@@ -47,36 +47,39 @@ def getitem(obj, item, default):
     else:
         return obj[item]
 
-def buildfnauthortree(rootnode, mastergraphcursor, fndict, depth = 2):
+def buildfnauthortree(rootnode, mastergraphcursor, fulldbcursor, depth = 2):
     _g =nx.DiGraph()
     q = Queue.Queue()
     q.put((rootnode, 0))
     while not q.empty():
         node = q.get()
         if node[1] < depth:
-            mastergraphcursor.execute('''SELECT coauthors FROM coauthors WHERE author = ?''', [node[0]])
-            coauthors = cg.fetchone()[0].split(',')
+            coauthors = mastergraphcursor('SELECT coauthors FROM coauthors WHERE author = ?', 
+                                          [node[0]], one = True)[0].split(',')
             for author in coauthors:
-                if unicode(fndict[author][0]+" "+fndict[author][1]) not in _g.nodes():
-                    _g.add_edge(unicode(fndict[node[0]][0]+ " "+fndict[node[0]][1]), 
-                                unicode(fndict[author][0]+" "+fndict[author][1]))
+                if lookupfn(author, fulldbcursor) not in _g.nodes():
+                    _g.add_edge(lookupfn(node[0], fulldbcursor), lookupfn(author, fulldbcursor))
                     q.put((author, node[1]+1))
     return _g
+
+def lookupfn(shortname, fulldbcursor):
+    return fulldbcursor('SELECT authorfn FROM authorfndict WHERE authorabbr = ?', [shortname], one=True)[0]
 
 def buildcitenetwork(rootnode, mastergraphcursor, authcursor, indepth = 0, outdepth = 2, 
                      colorscheme = colorbrewer.RdBu):
     _g =nx.DiGraph()
     q = Queue.Queue()
     #set up colors
-    _colors = colorscheme[max(outdepth,indepth)*2+1]
-    _colors.reverse()
+    _colors = (colorscheme[max(outdepth,indepth)*2+1])
+    #_colors.reverse() keeps reversing every page render...why?
     #first go in out direction
     q.put((rootnode, 0))
     try:
         lastname = authcursor('SELECT ln FROM authors WHERE pmid = ? AND authnum = 0', [rootnode], one=True)[0]
     except TypeError:
         lastname = rootnode
-    _g.add_node(rootnode, color = rgbtohex(_colors[(len(_colors)-1)/2]), ln = lastname)
+    _g.add_node(rootnode, color = rgbtohex(_colors[(len(_colors)-1)/2]), ln = lastname, 
+                meta = citetooltip(rootnode, authcursor))
     while not q.empty():
         node = q.get()
         if node[1] < outdepth:
@@ -89,7 +92,8 @@ def buildcitenetwork(rootnode, mastergraphcursor, authcursor, indepth = 0, outde
                             lastname = authcursor('SELECT ln FROM authors WHERE pmid = ? AND authnum = 0', [cite], one=True)[0]
                         except TypeError:
                             lastname = cite
-                        _g.add_node(cite, color = rgbtohex(_colors[(len(_colors)-1)/2+node[1]+1]), ln = lastname)
+                        _g.add_node(cite, color = rgbtohex(_colors[(len(_colors)-1)/2+node[1]+1]), ln = lastname,
+                                   meta = citetooltip(cite, authcursor))
                         _g.add_edge(node[0], cite)
                         q.put((cite, node[1]+1))
             except ValueError: #when there are none
@@ -108,12 +112,47 @@ def buildcitenetwork(rootnode, mastergraphcursor, authcursor, indepth = 0, outde
                             lastname = authcursor('SELECT ln FROM authors WHERE pmid = ? AND authnum = 0', [cite], one=True)[0]
                         except TypeError:
                             lastname = cite
-                        _g.add_node(cite, color = rgbtohex(_colors[(len(_colors)-1)/2-node[1]-1]), ln = lastname)
+                        _g.add_node(cite, color = rgbtohex(_colors[(len(_colors)-1)/2-node[1]-1]), ln = lastname,
+                                   meta = citetooltip(cite, authcursor))
                         _g.add_edge(cite, node[0])
                         q.put((cite, node[1]+1))
             except ValueError:
                 pass
     return _g
+
+def citetooltip(cite, authcursor):
+    returntext = ""
+    try:
+        returntext += "Title: " + authcursor('SELECT title from meta WHERE pmid = ?', [cite], one=True)[0] + "<br>"
+    except TypeError:
+        pass
+    try:
+        dbreply = authcursor('SELECT fn, ln from authors WHERE pmid = ?', [cite])
+        authors = authorstostring(dbreply)
+        if authors != "": returntext += "Authors: " + authors + "<br>"
+    except TypeError:
+        pass
+    return returntext
+
+def authorstostring(dbreply, links = False):
+    if links:
+        authors = ""
+        lenreply = len(dbreply)
+        for i, entry in enumerate(dbreply):
+            if i != lenreply-1:
+                authors += "<a href = " + flask.url_for('show_author', authname = entry[0] + " " + entry[1]) + " > " + entry[0] + " " + entry[1] + "</a>" + ", "
+            else:
+                authors += "and " + "<a href = " + flask.url_for('show_author', authname = entry[0] + " " + entry[1]) + " > " + entry[0] + " " + entry[1] + "</a>"
+        return authors
+    else:
+        authors = ""
+        lenreply = len(dbreply)
+        for i, entry in enumerate(dbreply):
+            if i != lenreply-1:
+                authors += entry[0] + " " + entry[1] + ", "
+            else:
+                authors += "and " + entry[0] + " " + entry[1]
+        return authors
 
 def rgbtohex(rgbtupleorlistoftuples):
     if type(rgbtupleorlistoftuples) == list:
@@ -134,9 +173,15 @@ def index():
     randompmid = int(getitem(args, 'randompmid', '0'))
     if (randompmid == 1):
         PMID = query_db_full('SELECT * FROM highlycitedpmids ORDER BY RANDOM() LIMIT 1',  one=True)[0]
+        title = query_db_full('SELECT title FROM meta WHERE pmid = ?', [PMID], one=True)[0]
     else:
         PMID = getitem(args, 'PMID', '')
-    if PMID != '':
+        #check that it exists, if not set PMID to "PMID_DOES_NOT_EXIST_IN_DB"
+        try:
+            title = query_db_full('SELECT title FROM meta WHERE pmid = ?', [PMID], one=True)[0]
+        except TypeError:
+            PMID = "PMID_DOES_NOT_EXIST_IN_DB"
+    if PMID != '' and PMID != "PMID_DOES_NOT_EXIST_IN_DB":
         citegraph = buildcitenetwork(PMID, query_db_graph, query_db_full, 2, 2)
         citenetwork = unicode(json.dumps(json_graph.node_link_data(citegraph, attrs={'source': 'source', 
                                                                                      'target': 'target', 
@@ -145,80 +190,46 @@ def index():
                                                                                      'color': 'color',
                                                                                      'ln': 'ln'
                                                                       })))
+        authorsstring = authorstostring(query_db_full('SELECT fn, ln FROM authors WHERE pmid = ?', [PMID], one=False), links = True)
+        authorkey = query_db_full('SELECT keyword FROM keywords WHERE pmid = ?', [PMID], one=False)
+        tfidfkey = query_db_full('SELECT keywords FROM tfidf WHERE pmid = ?', [PMID], one=True)[0]
+        journal = query_db_full('SELECT journal_id FROM meta WHERE pmid = ?', [PMID], one=True)[0]
+        
+        html = flask.render_template(
+            'index.html',
+            PMID = PMID,
+            JSONCITENETWORK = citenetwork,
+            authors = authorsstring,
+            title = title,
+            authorkey = authorkey,
+            journal = journal,
+            tfidfkey = tfidfkey
+        )
+        
     else:
-        citenetwork = ''
-    metastring = 'meta'
-    html = flask.render_template(
-        'index.html',
-        PMID = PMID,
-        JSONCITENETWORK = citenetwork,
-        meta = metastring)
+        html = flask.render_template(
+            'index.html',
+            PMID = '',
+            )
     return html
 
 @app.route('/author/<authname>')
 def show_author(authname):
-    try:
-        #GRAPHING AUTHOR
-        pngauthfile = BytesIO()
-        author = unicode(authname)
-        #author = u"Daniel M. Morobadi"
-        author = author.replace(" ","").lower()
-        #if countneigh(gauth, author_vertex_dict[author]) <= 15: #ideally should CATCH KeyError: u'soroushyazdi'
-        #    degrees = 2
-        #else:
-        #    degrees = 1
-        degrees = 2 #this is fine, now that we are limiting total plotted nodes
-        authorgraph, authorvertexdict, v_label = buildlocalgraphundirectedauthor(author_vertex_dict[author], gauth, degrees, limit = 120)
-        deg = authorgraph.degree_property_map("total") #out AND in how? #TOTAL!
-        state = gt.minimize_nested_blockmodel_dl(authorgraph, deg_corr=True)
-        bstack = state.get_bstack()
-        t = gt.get_hierarchy_tree(state)[0]
-        tpos = pos = gt.radial_tree_layout(t, t.vertex(t.num_vertices() - 1), weighted=True)#
-        cts = gt.get_hierarchy_control_points(authorgraph, t, tpos)#crashing here? ##BECAUSE OF G!!!
-        pos = authorgraph.own_property(tpos)
-        b = bstack[0].vp["b"]
-        #labels
-        import math
-        text_rot = authorgraph.new_vertex_property('double')
-        authorgraph.vertex_properties['text_rot'] = text_rot
-        for v in authorgraph.vertices():
-            if pos[v][0] >0:
-                text_rot[v] = math.atan(pos[v][1]/pos[v][0])
-            else:
-                text_rot[v] = math.pi + math.atan(pos[v][1]/pos[v][0])         
-        #text color
-        text_col = authorgraph.new_vertex_property("vector<double>")
-        for i, v in enumerate(authorgraph.vertices()):
-            if i == 0:
-                text_col[v] = [1,0,.1,1]
-            else:
-                text_col[v] = [0,0,0,1]
-        gt.graph_draw(authorgraph, pos=pos, 
-                    edge_control_points=cts,
-                    vertex_size=10,
-                    vertex_text=v_label,
-                    #vertex_text_rotation=authorgraph.vertex_properties['text_rot'],
-                    vertex_text_rotation=text_rot,  
-                    vertex_text_position=1,
-                    vertex_font_size=14,
-                    vertex_anchor=0,
-                    vertex_fill_color=deg,
-                    vertex_text_color=text_col,
-                    #vertex_text_color=[.5,0,.1,1],
-                    #bg_color=[0,0,0,1],
-                    output_size=[600,600],
-                    fmt = 'png',
-                    output = pngauthfile)
-        pngauthfile.seek(0)
-        authfigdata_png = base64.b64encode(pngauthfile.getvalue())
-        #DONE
-    except KeyError:
-        authfigdata_png = ''
-
+    #try:
+    authname = authname.lower().replace(" ", "")
+    authortree = buildfnauthortree(authname, query_db_graph, query_db_full, 2)
+    authornetwork = unicode(json.dumps(json_graph.tree_data(authortree, lookupfn(authname, query_db_full), 
+                                                            attrs={'children': 'children', 'id': 'name'})))
+    #except TypeError:
+    #    authornetwork = ''
     html = flask.render_template(
         'authors.html',
-        authfig = authfigdata_png)
+        JSONAUTHORNETWORK = authornetwork)
     return html
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('js', path)
     
 @app.teardown_appcontext
 def close_connection(exception):

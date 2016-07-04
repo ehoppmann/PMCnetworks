@@ -5,7 +5,7 @@
 		<title>Citation Network Map</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-		<script src="https://d3js.org/d3.v3.min.js"></script>
+		<script src="js/d3.v3.min.js"></script>
 	</head>
 	<style>
 		path.link {
@@ -30,17 +30,18 @@
 		    <br>
   			<p class="lead">Enter PMID Below</p>
 			<form name="pmid" method='GET'>
-			PMID: <input type="text" name="PMID">
+			PMID: <input type="text" name="PMID" style="width: 215px" value={{PMID|safe}}>
 			<button type="submit">Go</button>
 			Or fetch a random article: <button type="submit" name="randompmid" value="1">Random</button>
 			</form>
-			{% if PMID != '' %}
-			PMID: {{ PMID|safe }}
-			{{ meta | safe }}
-			<br>
-			<div class="caption">Incoming and outgoing citation network for selected paper (to two levels deep in each direction):</div>
-            <br>
+			{% if PMID != '' and PMID != "PMID_DOES_NOT_EXIST_IN_DB"%}
+            Title: {{ title | safe }} <br>
+            Journal Abbreviation: {{ journal | safe }} <br>
+			Authors: {{ authors | safe }} <br>
+            Author's Keywords: {{authorkey | safe }} <br>
+            TF-IDF top 5 keywords: {{tfidfkey | safe }} <br>
 		</div>
+        <div id = "plotarea"></div>
 		</div>
 		<script>
 		// get the data
@@ -58,7 +59,7 @@
 	        .on("tick", tick)
 	        .start();
 
-	    var svg = d3.select("body").append("svg")
+	    var svg = d3.select("#plotarea").append("svg")
 	        .attr("width", width)
 	        .attr("height", height);
 
@@ -106,6 +107,7 @@
 	        .on("click", click)
 	        .on("mouseover", mouseover)
 	        .on("mouseout", mouseout)
+            .on("mousemove", mousemove)
 	        .call(drag);
 
 	    // add the nodes
@@ -142,27 +144,41 @@
 	                return "translate(" + d.x + "," + d.y + ")";
 	            });
 	    }
-	   
+	    var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("background-color", "lightgrey") //fallback for browsers without rgba support
+            .style("background-color", "rgba(255,255,255,0.75)")
+            .style("border-radius", "5px");
+            //.text("a simple tooltip");
+            
+        //action to take on mousemove
+        function mousemove () {
+                tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+        }
+            
 	    //action to take on mouseover
-	    function mouseover() {
+	    function mouseover(d) {
+                tooltip.style("visibility", "visible")
+                tooltip.html(d.meta) //changed to .html from .text to enable html like line breaks in d.meta
 	            d3.select(this).select("circle").transition()
-	                .duration(750)
+	                .duration(400)
 	                .attr("r", 9)
-	            d3.select(this).select("text").transition()
-	                .duration(750)
+	            d3.select(this).select("text")
 	                .attr("dy", ".31em")
-	                .style("stroke-width", ".5px")
-	                .style("font", "20px serif")
-	                .style("fill", "#000000")
-	                .style("opacity", 1);
+	                .style("fill", "black")
+	                .style("opacity", 0);
 	        }
 	    //action to take on mouseout
 	    function mouseout() {
+                tooltip.style("visibility", "hidden");
 	            d3.select(this).select("circle").transition()
-	                .duration(750)
-	                .attr("r", 3.5)
+	                .duration(400)
+	                .attr("r", 6)
 	            d3.select(this).select("text").transition()
-	                .duration(750)
+	                .duration(400)
 	                .attr("dy", ".31em")
 	                .style("font", "10px serif")
 	                .style("fill", "black")
@@ -181,6 +197,8 @@
                 return {{JSONCITENETWORK | safe}}
         }
 		</script>
+        <br>
+        <div style = "text-indent: 50px; font-weight: bold">Incoming and outgoing citation network for selected paper (to two levels deep in each direction)</div>
         {% endif %}
 	</body>
 </html>
