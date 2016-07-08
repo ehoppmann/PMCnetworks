@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from bs4 import BeautifulSoup
-from parserlib import EFetchExtractor #custom parser fns
+from pubmed_parser_lib import EFetchExtractor #custom parser fns
 import os
 import fnmatch
 files_path = "/Users/eric/Documents/DataIncubator/capstone/PMCnetworks/1-scape-parse" ## PATH TO INPUT FILES
