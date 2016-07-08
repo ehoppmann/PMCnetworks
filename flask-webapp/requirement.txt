@@ -1,4 +1,0 @@
-gunicorn
-flask>=0.11.1
-networkx
-colorbrewer

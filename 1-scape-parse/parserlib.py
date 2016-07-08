@@ -1,3 +1,5 @@
+import datetime
+
 class EFetchExtractor(object):
     def __init__(self, soup):
         self.soup = soup
@@ -22,7 +24,7 @@ class EFetchExtractor(object):
         return unicode(self.soup.find('article-meta').find('article-categories').find('subj-group').find('subject').contents[0])
     
     def title(self):
-        return unicode(self.soup.find('article-meta').find('title-group').find('article-title').contents[0])
+        return unicode(self.soup.find('article-meta').find('title-group').find('article-title').contents[0]).replace("\n"," ")
         
     def authors(self):
         #Returns nested list containing first names and last names of authors
@@ -109,9 +111,9 @@ class EFetchExtractor(object):
 #        return ln
         
     def pubdate(self):
-        day = self.soup.find('pub-date', {"pub-type" : "epub"}).find('day').contents[0]
-        month = self.soup.find('pub-date', {"pub-type" : "epub"}).find('month').contents[0]
-        year = self.soup.find('pub-date', {"pub-type" : "epub"}).find('year').contents[0]
+        day = self.soup.find('pub-date').find('day').getText()
+        month = self.soup.find('pub-date').find('month').getText()
+        year = self.soup.find('pub-date').find('year').getText()
         return datetime.date(int(year), int(month), int(day))
         
     def acceptdate(self):
