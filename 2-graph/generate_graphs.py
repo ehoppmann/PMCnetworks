@@ -3,7 +3,7 @@ import cPickle as pickle
 import graph_tool as gt
 import itertools
 
-conn = sqlite3.connect('pmcv1-full.db')
+conn = sqlite3.connect('pmcv2-full.db')
 c = conn.cursor()
 g = gt.Graph(directed = True)
 pmid_vertex_dict = dict()
@@ -18,6 +18,16 @@ for pair in c.execute('''SELECT pmid, refpmid FROM refs'''):
 
 pickle.dump(g, open("full_graph.p", "wb"))
 pickle.dump(pmid_vertex_dict, open("full_graph_pmid_vertex_dict.p", "wb"))
+
+def addedge(graphobject, source, dest, vertexdict):
+    if source not in vertexdict:
+        v = graphobject.add_vertex()
+        vertexdict[source] = int(v)
+    if dest not in vertexdict:
+        v = graphobject.add_vertex()
+        vertexdict[dest] = int(v)
+    graphobject.add_edge(vertexdict[source], vertexdict[dest])
+    return graphobject, vertexdict
 
 g = gt.Graph(directed = False)
 author_vertex_dict = dict()
