@@ -204,12 +204,11 @@ def index():
         title = query_db_full('SELECT title FROM meta WHERE pmid = ?', [PMID], one=True)[0]
     else:
         PMID = getitem(args, 'PMID', '')
-        #check that it exists, if not set PMID to "PMID_DOES_NOT_EXIST_IN_DB"
         try:
             title = query_db_full('SELECT title FROM meta WHERE pmid = ?', [PMID], one=True)[0]
         except TypeError:
-            PMID = "PMID_DOES_NOT_EXIST_IN_DB"
-    if PMID != '' and PMID != "PMID_DOES_NOT_EXIST_IN_DB":
+            PMID = ""
+    if PMID != '':
         citegraph = buildcitenetwork(PMID, query_db_graph, query_db_full, 2, 2)
         citenetwork = unicode(json.dumps(json_graph.node_link_data(citegraph, attrs={'source': 'source', 
                                                                                      'target': 'target', 
@@ -228,12 +227,11 @@ def index():
         tfidfkey = ''
         journal = query_db_full('SELECT journal_id FROM meta WHERE pmid = ?', [PMID], one=True)[0]
         incitep = int(incitepercentile(PMID, query_db_full, query_db_graph))
-        barcolorscheme = map(rgbtohex, colorbrewer.PiYG[10])
+        barcolorscheme = map(rgbtohex, colorbrewer.RdYlGn[10])
         if incitep > 0 and incitep < 100:
             incitecol = barcolorscheme[incitep/10]
         else:
             incitecol = 'f7f7f7'
-        
         html = flask.render_template(
             'index.html',
             PMID = PMID,
