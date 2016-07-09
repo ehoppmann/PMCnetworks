@@ -3,9 +3,17 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Citation Network Map</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<script src="js/d3.v3.min.js"></script>
+		<script src='js/jquery-3.1.0.min.js'></script>
+		<link rel="stylesheet" type="text/css" href="css/tooltipster.bundle.min.css" />
+		<script type="text/javascript" src="js/tooltipster.bundle.min.js"></script>
+		<script>
+        $(document).ready(function() {
+            $('.tooltipster').tooltipster();
+        });
+        </script>
 	</head>
 	<style>
 		path.link {
@@ -23,26 +31,114 @@
 		  fill: #000;
 		  font: 10px sans-serif;
 		}
+		
+		.skillbar {
+			position:relative;
+			display:block;
+			margin-bottom:15px;
+			width:100%;
+			background:#eee;
+			height:35px;
+			border-radius:3px;
+			-moz-border-radius:3px;
+			-webkit-border-radius:3px;
+			-webkit-transition:0.4s linear;
+			-moz-transition:0.4s linear;
+			-ms-transition:0.4s linear;
+			-o-transition:0.4s linear;
+			transition:0.4s linear;
+			-webkit-transition-property:width, background-color;
+			-moz-transition-property:width, background-color;
+			-ms-transition-property:width, background-color;
+			-o-transition-property:width, background-color;
+			transition-property:width, background-color;
+		}
+
+		.skillbar-title {
+			position:absolute;
+			top:0;
+			left:0;
+			font-weight:bold;
+			font-size:13px;
+			color:#fff;
+			background:#6adcfa;
+			-webkit-border-top-left-radius:3px;
+			-webkit-border-bottom-left-radius:4px;
+			-moz-border-radius-topleft:3px;
+			-moz-border-radius-bottomleft:3px;
+			border-top-left-radius:3px;
+			border-bottom-left-radius:3px;
+		}
+
+		.skillbar-title span {
+			display:block;
+			background:rgba(0, 0, 0, 0.1);
+			padding:0 20px;
+			height:35px;
+			line-height:35px;
+			-webkit-border-top-left-radius:3px;
+			-webkit-border-bottom-left-radius:3px;
+			-moz-border-radius-topleft:3px;
+			-moz-border-radius-bottomleft:3px;
+			border-top-left-radius:3px;
+			border-bottom-left-radius:3px;
+		}
+
+		.skillbar-bar {
+			height:35px;
+			width:0px;
+			background:#6adcfa;
+			border-radius:3px;
+			-moz-border-radius:3px;
+			-webkit-border-radius:3px;
+		}
+
+		.skill-bar-percent {
+			position:absolute;
+			right:10px;
+			top:0;
+			font-size:11px;
+			height:35px;
+			line-height:35px;
+			color:#444;
+			color:rgba(0, 0, 0, 0.4);
+		}
 	</style>
 	<body>
 		<div class="container">
 		<div class="starter-template">
 		    <br>
-  			<p class="lead">Enter PMID Below</p>
+  			<h3>Enter PMID Below</h3>
 			<form name="pmid" method='GET'>
 			PMID: <input type="text" name="PMID" style="width: 215px" value={{PMID|safe}}>
 			<button type="submit">Go</button>
 			Or fetch a random article: <button type="submit" name="randompmid" value="1">Random</button>
 			</form>
 			{% if PMID != '' and PMID != "PMID_DOES_NOT_EXIST_IN_DB"%}
+			<h4>Publication information: </h4>
             Title: {{ title | safe }} <br>
             Journal Abbreviation: {{ journal | safe }} <br>
 			Authors: {{ authors | safe }} <br>
             Author's Keywords: {{authorkey | safe }} <br>
+			<h4>Computed publication information:</h4>
             TF-IDF top 5 keywords: {{tfidfkey | safe }} <br>
+			<br>
+			<div class="skillbar clearfix tooltipster" data-percent="{{incitep | safe}}%" title = "The influence of the paper is defined as the percentile rank of the number of times it has been cited per day since publication">
+				<div class="skillbar-title" style="background: #{{incitecol | safe}};"><span>Influence</span></div>
+				<div class="skillbar-bar" style="background: #{{incitecol | safe}};"></div>
+				<div class="skill-bar-percent">{{incitep | safe}}%</div>
+			</div>
 		</div>
+		<div style = "text-indent: 50px; font-weight: bold">Incoming and outgoing citation network for selected paper (to two levels deep in each direction):</div>
         <div id = "plotarea"></div>
 		</div>
+		<script>
+		jQuery('.skillbar').each(function(){
+			jQuery(this).find('.skillbar-bar').animate({
+				width:jQuery(this).attr('data-percent')
+			},2000);
+		});
+	    </script>
 		<script>
 		// get the data
         var json = getData()
@@ -197,8 +293,6 @@
                 return {{JSONCITENETWORK | safe}}
         }
 		</script>
-        <br>
-        <div style = "text-indent: 50px; font-weight: bold">Incoming and outgoing citation network for selected paper (to two levels deep in each direction)</div>
         {% endif %}
 	</body>
 </html>
