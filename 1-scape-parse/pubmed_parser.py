@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from pubmed_parser_lib import EFetchExtractor #custom parser fns
 import os
 import fnmatch
-files_path = "/Users/eric/Documents/DataIncubator/capstone/PMCnetworks/1-scape-parse" ## PATH TO INPUT FILES
+files_path = "INPUT_PATH" ## PATH TO INPUT FILES
 fileslist = []
 for root, dirnames, filenames in os.walk(files_path):
     for filename in fnmatch.filter(filenames, '*.nxml'):
@@ -12,7 +12,7 @@ print len(fileslist)
 
 # init SQL tables
 import sqlite3
-conn = sqlite3.connect('pmcv1.db')
+conn = sqlite3.connect('pmcv2.db')
 c = conn.cursor()
 c.execute('''CREATE TABLE refs (pmid integer, refpmid integer)''')
 c.execute('''CREATE TABLE pmcidmap (pmid integer, pmcid integer)''')
