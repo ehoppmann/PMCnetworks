@@ -117,13 +117,15 @@
 			</form>
 			{% if PMID != ''%}
 			<h4>Publication information: </h4>
-            Title: {{ title | safe }} <br>
-            Journal Abbreviation: {{ journal | safe }} <br>
+            <strong>Title: {{ title | safe }} </strong><br>
+            Journal Abbreviation: <em>{{ journal | safe }} </em><br>
 			Authors: {{ authors | safe }} <br>
+			Abstract: {{abstract | safe}} <br>
+			{% if authorkey != '' %}
             Author's Keywords: {{authorkey | safe }} <br>
+			{% endif %}
 			<a href = "http://www.ncbi.nlm.nih.gov/pubmed/?term={{PMID | safe}}">View full text article on PMC</a>
 			<h4>Computed publication information:</h4>
-            TF-IDF top 5 keywords: {{tfidfkey | safe }} <br>
 			<br>
 			<div class="skillbar clearfix tooltipster" data-percent="{{incitep | safe}}%" title = "The influence of the paper is defined as the percentile rank of the number of times it has been cited per day since publication">
 				<div class="skillbar-title" style="background: #{{incitecol | safe}};"><span>{{inciteplab | safe}}</span></div>
@@ -139,6 +141,14 @@
 			<p class="bg-success">Hint: try clicking and dragging the nodes. Then try clicking without dragging on nodes with full publication information. </p>
 		</div>
 		</div>
+		<br>
+		<div class="container">
+			<h4>Computed Top 10 most similar documents</h4>
+			<p>Ranked by the cosine similarity of the document's sublinear TF-IDF vector as compared to all other documents in the corpus.</p>
+			<p>Currently only available for PMIDs in the 1000 which the random button selects from due to computational expense of the calculation</p>
+			{{similarlist | safe}}
+		</div>
+
 		<script>
 		jQuery('.skillbar').each(function(){
 			jQuery(this).find('.skillbar-bar').animate({

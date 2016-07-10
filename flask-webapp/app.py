@@ -223,8 +223,6 @@ def index():
         for key in authorkey:
             authorkeytemp += key[0] + ", "
         authorkey = authorkeytemp.rstrip(", ")
-        #tfidfkey = query_db_full('SELECT keywords FROM tfidf WHERE pmid = ?', [PMID], one=True)[0]
-        tfidfkey = ''
         journal = query_db_full('SELECT journal_id FROM meta WHERE pmid = ?', [PMID], one=True)[0]
         barcolorscheme = map(rgbtohex, colorbrewer.RdYlGn[10])
         try:
@@ -238,7 +236,24 @@ def index():
             incitep = 0
             inciteplab = 'Influence Unavailable (pubdate missing for record)'
             incitecol = 'f7f7f7'
-        
+        try: #fetch top 1 most similar pubs by cosine similarity of tf-idf
+            response = query_db_full('SELECT similar FROM similarpubs WHERE pmid = ?', [PMID], one=True)[0]
+            similarpmids = []
+            for item in response.replace(" ","").split(","):
+                similarpmids.append(int(item))
+            similarlist = '<ol style="line-height: 160%;" >'
+            for item in similarpmids:
+                title = query_db_full('SELECT title FROM meta WHERE pmid = ?', [item], one=True)[0]
+                journal = query_db_full('SELECT journal_id FROM meta WHERE pmid = ?', [item], one=True)[0]
+                similarauths = authorstostring(query_db_full('SELECT fn, ln FROM authors WHERE pmid = ?', [item], one=False), links = False)
+                similarlist = similarlist + '<li>' +  "<a href = " + flask.url_for('index', PMID = item) + " > " + title + '</a>, <em>' + journal + '</em>' + '<br>' + similarauths + '</li>'
+            similarlist = similarlist + '</ol>'
+        except:
+            similarlist = '<p class="bg-warning">Not computed for this PMID</p>'
+        try: #fetch abstract
+            abstract = query_db_full('SELECT abstract FROM abstracts WHERE pmid = ?', [PMID], one=True)[0]
+        except:
+            abstract = ''
 
         html = flask.render_template(
             'index.html',
@@ -248,10 +263,11 @@ def index():
             title = title,
             authorkey = authorkey,
             journal = journal,
-            tfidfkey = tfidfkey,
             incitep = incitep,
             incitecol = incitecol,
-            inciteplab = inciteplab
+            inciteplab = inciteplab,
+            similarlist = similarlist,
+            abstract = abstract
         )
         
     else:
