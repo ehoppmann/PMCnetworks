@@ -15,7 +15,7 @@ import colorbrewer
 import numpy as np
 import datetime
 
-DBfull = 'db/pmcv1-full.db'
+DBfull = 'db/pmcv3-full.db'
 DBgraph = 'db/pmcv1-graph.db'
 
 def get_db_full():
@@ -226,12 +226,20 @@ def index():
         #tfidfkey = query_db_full('SELECT keywords FROM tfidf WHERE pmid = ?', [PMID], one=True)[0]
         tfidfkey = ''
         journal = query_db_full('SELECT journal_id FROM meta WHERE pmid = ?', [PMID], one=True)[0]
-        incitep = int(incitepercentile(PMID, query_db_full, query_db_graph))
         barcolorscheme = map(rgbtohex, colorbrewer.RdYlGn[10])
-        if incitep > 0 and incitep < 100:
-            incitecol = barcolorscheme[incitep/10]
-        else:
+        try:
+            incitep = int(incitepercentile(PMID, query_db_full, query_db_graph))
+            if incitep > 0 and incitep < 100:
+                incitecol = barcolorscheme[incitep/10]
+            else:
+                incitecol = 'f7f7f7'
+            inciteplab = 'Influence'
+        except TypeError: #date missing for entry
+            incitep = 0
+            inciteplab = 'Influence Unavailable (pubdate missing for record)'
             incitecol = 'f7f7f7'
+        
+
         html = flask.render_template(
             'index.html',
             PMID = PMID,
@@ -242,7 +250,8 @@ def index():
             journal = journal,
             tfidfkey = tfidfkey,
             incitep = incitep,
-            incitecol = incitecol
+            incitecol = incitecol,
+            inciteplab = inciteplab
         )
         
     else:
