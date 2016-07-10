@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Citation Network Map</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" href="../css/bootstrap-theme.min.css">
 	</head>
     <style>
 
@@ -29,9 +29,14 @@
 		<div class="container">
 		<div class="starter-template">
 			<br>
-            {% if authornetwork != ''%}
-			<div class="caption">Author's co-author network to two degrees</div>
-            <div id = "plotarea"></div>
+            {% if JSONAUTHORNETWORK != ''%}
+            <div class="container-fluid text-center"> 
+                <h3> Coauthorship network </h3>
+                <h4>Author's co-author network to two degrees</h4>
+                <p>(limited to one degree if plotting 2nd degree would cause nodes to become unreadable)</p>
+                <div id = "plotarea"></div>
+                <p class="bg-success">Hint: try hovering over the names </p>
+            </div>
             <script src="/js/d3.v3.min.js"></script>
             <script>
 
@@ -150,9 +155,11 @@
                 
 
             </script>
+            {% else %}
+            <h4>Sorry, this author is not in the database. </h4>
             {% endif %}
 			<br>
-			<FORM><INPUT Type="button" VALUE="Back" onClick="history.go(-1);return true;"></FORM>
+			<FORM><INPUT Type="button" VALUE="Back" class="btn btn-info" onClick="history.go(-1);return true;"></FORM>
 		</div>
 		</div>
 	</body>

@@ -265,11 +265,12 @@ def index():
 def show_author(authname):
     #try:
     authname = authname.lower().replace(" ", "")
-    authortree = buildfnauthortree(authname, query_db_graph, query_db_full, 2)
-    authornetwork = unicode(json.dumps(json_graph.tree_data(authortree, lookupfn(authname, query_db_full), 
-                                                            attrs={'children': 'children', 'id': 'name'})))
-    #except TypeError:
-    #    authornetwork = ''
+    try:
+        authortree = buildfnauthortree(authname, query_db_graph, query_db_full, 2)
+        authornetwork = unicode(json.dumps(json_graph.tree_data(authortree, lookupfn(authname, query_db_full), 
+                                                                attrs={'children': 'children', 'id': 'name'})))
+    except TypeError:
+        authornetwork = ''
     html = flask.render_template(
         'authors.html',
         JSONAUTHORNETWORK = authornetwork)
