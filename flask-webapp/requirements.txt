@@ -2,3 +2,4 @@ gunicorn>=19.6.0
 flask>=0.11.1
 networkx==1.11
 colorbrewer==0.1.1
+numpy

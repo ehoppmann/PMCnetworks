@@ -113,7 +113,7 @@
 			<label>PMID: </label> <input type="text" name="PMID" style="width: 215px" value="{{PMID|safe}}" class = "form-control tooltipster" placeholder="Enter PMID, or click Random" title = "PMID = PubMed identifier, used to uniquely identify publications in the PubMed Central database. If entered PMID is not in scraped dataset, your query will return blank.">
 			<button type="submit" class="btn btn-default">Go</button>
 			<label>Or fetch a random article: </label>
-			<button type="submit" name="randompmid" value="1" class="btn btn-default tooltipster" title="Only returns articles with at least a moderate number of citations, to keep things interesting :)">Random</button>
+			<button type="submit" name="randompmid" value="1" class="btn btn-info tooltipster" title="Only returns articles with at least a moderate number of citations, to keep things interesting :)">Random</button>
 			</form>
 			{% if PMID != ''%}
 			<h4>Publication information: </h4>
