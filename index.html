@@ -111,13 +111,14 @@
                 <h3>Step 1: Scraping, parsing and munging</h3>
                 <p>3.5 million full text articles collected from PubMed Central, saved using gzip to keep data size manageable. Then, using a parser created primarily using Beautiful Soup, data is read from each article and stored into SQL tables, keying the data against the PMIDs which uniquely identify the articles.</p>
                 <img src="img/sqltables-fig.png" alt="SQL tables"  style = "margin-bottom: 0.5cm">
-                <h3>Step 2: Suggested keyword generation (TF-IDF)</h3>
-                <p>The gensim python library was used to construct the TF-IDF model since the gensim library is able to process data chunk by chunk rather than all at once (the data set is far too large for scikit learn). Stopwords and words that only occurred once in a document were excluded from the analysis. After building the dictionary for the entire corpus, the model was run on each document and the top scoring words saved to a new SQL table for easy retrieval.</p>
-                <h3>Step 3: Citation and co-authorship network analysis</h3>
+                <h3>Step 2: Citation and co-authorship network analysis</h3>
                 <p>The graph-tool python was used to construct two graph networks, since the networks are far too large to load into memory with a tool like NetworkX. 
                 <p>The directed citation graph network has nodes which represent publications and the directed edges which connect publications to the papers they cite. This network contains 7.7 million nodes and 31 million edges. This number is larger than the number of papers parsed (3.5M) because many citations are to publications which are not open access, therefore my parser creates a target node and edge linking to publications which are not contained in my dataset.</p>
                 <p>The undirected co-authorship graph network has nodes representing authors and edges indicating that they have appeared on a publication together. The network contains 2.4 million nodes and 210 million edges.</p>
-
+                <p>The graph network was then serialized to SQL so that it can be interactively querried in the web app without loading the network into memory</p>
+                <h3>Step 3: Related articles generation (TF-IDF + Cosine Similarity)</h3>
+                <p>The sklearn python library was used to construct a TF-IDF model of the abstracts in the corpus, using stopwords provided by NLTK. After constructing the TF-IDF model, each article's cosine similarity with every other article was evaluated and ranked in descending order to suggest related articles to the user. </p>
+                <p>Due to the high computational cost of the calculation, this computation was only performed for the ~1000 articles that the webapp randomly choses between when the user clicks the random button.</p>
             </div>
         </div>
     </section>
@@ -137,7 +138,7 @@
                         </div>
                         <div style = "float: right; width:380px;">
                             <img src = "img/outcites.svg" alt = "Out Citations" style="width:380px"/>
-                            <p style="font-size : 120%;">Outgoing Citations: As expected, there is a peak with the most common number of citations (~25), tailing off in either direction</p>
+                            <p style="font-size : 120%;">Outgoing Citations: As expected, there is a peak at the most common number of citations (~25), tailing off in either direction</p>
                         </div>
                     </div>
                 </div>
