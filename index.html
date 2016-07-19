@@ -12,15 +12,18 @@
     <title>Citation Explorer</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/grayscale.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/creative.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,49 +32,23 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="js/d3.v3.min.js"></script>
-
 </head>
 
-<style>
-    path.link {
-        fill: none;
-        stroke: #ccc;
-        stroke-width: 1.5px;
-    }
+<body id="page-top">
 
-    circle {
-        stroke: #4c4c4c;
-        stroke-width: 1.5px;
-    }
-
-    text {
-        fill: #000;
-        font: 10px sans-serif;
-    }
-</style>
-
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
-        <div class="container">
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
-                    <i class="fa fa-bars"></i>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">
-                    <!--  <i class="fa fa-play-circle"></i>  <span class="light">Start</span> Bootstrap-->
-                </a>
+                <a class="navbar-brand page-scroll" href="#page-top">Citation Explorer</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
-                <ul class="nav navbar-nav">
-                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a class="page-scroll" href="#about">About</a>
                     </li>
@@ -82,81 +59,101 @@
                         <a class="page-scroll" href="#results">Results</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#livedemo">Live Demo</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#staticdemo">Static Demo</a>
+                        <a class="page-scroll" href="#demo">Live Demo</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
                     </li>
+                    
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container -->
+        <!-- /.container-fluid -->
     </nav>
 
-    <!-- Intro Header -->
-    <header class="intro">
-        <div class="intro-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                        <h1 class="brand-heading" style="font-size: 100px">Citation Explorer</h1>
-                        <p class="intro-text">Deciphering the social networks of human knowledge</p>
-                        <a href="#about" class="btn btn-circle page-scroll">
-                            <i class="fa fa-angle-double-down animated"></i>
-                        </a>
-                    </div>
-                </div>
+    <header>
+        <div class="header-content">
+            <div class="header-content-inner">
+                <h1 id="homeHeading">Citation Explorer</h1>
+                <hr>
+                <p style = "color: #fff">My data incubator capstone project to enable users to generate insights by interactively exploring journal article citation and collaboration networks. The full set of journal articles in the open access PubMed Central repository (~3.5M) were used for this project.</p>
+                <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
             </div>
         </div>
     </header>
 
-    <!-- About Section -->
-    <section id="about" class="container content-section text-center">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <h2>About Citation Explorer</h2>
-                <p>Citation Explorer was created to better understand the citation networks and co-authorship networks that underlie human knowledge. </p>
-                <p>Understanding the networks that underlie academic research has applications from aiding publishers in screening new content for publication and identifying appropriate reviewers to identifying new technology and IP that is very early in it’s exponential growth trajectory that may be worth acquiring exclusive rights to and productizing. </p>
-                <p>For this project, I focused on laying the groundwork for this sort of analysis by generating citation and coauthorship networks from the full set of open access publications from PubMed Central.</p>
-                <p>For individual papers and authors, I've created a tool which allows the user to dynamically generate a publication summary, interactive (D3.js) citation networks, and suggested related publications (cosine similarity of TF-IDF) based on the data available in SQL. Additionally, by clicking an author's name, the user can view a graphical network of all of the author's collaborators to two degrees.</p>
-                <p>See the code on <a href="https://github.com/eric11/PMCnetworks">GitHub</a>, or skip to the <a class="page-scroll" href="#livedemo">Live Demo</a></p>
+    <section class="bg-primary" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">About</h2>
+                    <hr class="light">
+                    <p class="text">Citation Explorer was created to allow users to explore the hidden web of citations and collaborations that describe the human aspects of knowledge creation. </p>
+                    <p class="text">Understanding these network effects has applications from identifying emerging technology and IP to aiding large publishing houses in identifying and bringing in top quality new content to maintain and grow their journals.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Process Section -->
-    <section id="process" class="container content-section text-center">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <h2>The Process</h2>
-                <h3>Step 1: Scraping, parsing and munging</h3>
-                <p>3.5 million full text articles collected from PubMed Central, saved using gzip to keep data size manageable. Then, using a parser created primarily using Beautiful Soup, data is read from each article and stored into SQL tables, keying the data against the PMIDs which uniquely identify the articles.</p>
-                <img src="img/sqltables-fig.png" alt="SQL tables"  style = "margin-bottom: 0.5cm">
-                <h3>Step 2: Citation and co-authorship network analysis</h3>
-                <p>The graph-tool python was used to construct two graph networks, since the networks are far too large to load into memory with a tool like NetworkX. 
-                <p>The directed citation graph network has nodes which represent publications and the directed edges which connect publications to the papers they cite. This network contains 7.7 million nodes and 31 million edges. This number is larger than the number of papers parsed (3.5M) because many citations are to publications which are not open access, therefore my parser creates a target node and edge linking to publications which are not contained in my dataset.</p>
-                <p>The undirected co-authorship graph network has nodes representing authors and edges indicating that they have appeared on a publication together. The network contains 2.4 million nodes and 210 million edges.</p>
-                <p>The graph network was then serialized to SQL so that it can be interactively queried in the web app without loading the network into memory</p>
-                <h3>Step 3: Related articles generation (TF-IDF + Cosine Similarity)</h3>
-                <p>The sklearn python library was used to construct a TF-IDF model of the abstracts in the corpus, using stopwords provided by NLTK. After constructing the TF-IDF model, each article's cosine similarity with every other article was evaluated and ranked in descending order to suggest related articles to the user. </p>
-                <p>Due to the high computational cost of the calculation, this computation was only performed for the ~1000 articles that the webapp randomly choses between when the user clicks the random button.</p>
+    <section id="process">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">The Process</h2>
+                    <hr class="primary">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-newspaper-o text-primary sr-icons"></i>
+                        <h3>3.5 Million Articles</h3>
+                        <p class="text-muted">3.5 million full text articles scraped from PubMed Central</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-database text-primary sr-icons"></i>
+                        <h3>Parsed to SQL</h3>
+                        <p class="text-muted">The articles were parsed using Beautiful Soup and the content was stored in SQL tables</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-connectdevelop text-primary sr-icons"></i>
+                        <h3>2 Graph Networks</h3>
+                        <p class="text-muted">Constructed 2 networks totaling 10 million nodes, serialized back to SQL for flask webapp</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-thumbs-o-up text-primary sr-icons"></i>
+                        <h3>Article Suggestions</h3>
+                        <p class="text-muted">Similar article suggestions generated based on TF-IDF cosine similarity of the abstracts</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row text-center container">
+            <h2>The Process, Pictured</h2>
+            <hr class="primary">
+            <img src="img/sqltables-fig.png" alt="SQL tables"  style = "margin-bottom: 0.5cm">
             </div>
         </div>
     </section>
 
-    <!-- Results Section -->
-    <section id="results" class="content-section text-center">
-        <div class="results-section">
-            <div class="container">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <h2>Results</h2>
-                    <h3>Citation Network Statistics</h3>
-                    <p>After generating the SQL tables of parsed data, it is interesting to begin exploring some of the global statistics. To begin with, I plotted histograms of the number of incoming citations and outgoing citations for every publication:</p>
-                    <div style="display:inline-block; width:800px; height:400px; position: relative; left: -0px">
+    <section class="bg-primary" id="results">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Results</h2>
+                    <hr class="light">
+                    <h3>Global citation network statistics</h3>
+                    <p class="text">After generating the SQL tables of parsed data, it is interesting to begin exploring some of the global statistics. To begin with, I plotted histograms of the number of incoming citations and outgoing citations for every publication:</p>
+                                        <div style="display:inline-block; width:800px; height:400px; position: relative; left: -0px">
                         <div style = "float: left; width:380px;">
                             <img src = "img/incites.svg" alt = "In Citations" style="width:380px"/>
                             <p style="font-size : 120%;">Incoming Citations: These follow the expected trend, peaking at 0 and tailing off towards higher numbers of citations</p>
@@ -166,8 +163,8 @@
                             <p style="font-size : 120%;">Outgoing Citations: As expected, there is a peak at the most common number of citations (~25), tailing off in either direction</p>
                         </div>
                     </div>
-                    <h3>Citations vs. Time Statistics</h3>
-                    <div style="display:inline-block; width:800px; height:400px; position: relative; left: -0px">
+                    <h3>Citation vs. Time Statistics</h3>
+                                        <div style="display:inline-block; width:800px; height:400px; position: relative; left: -0px">
                         <div style = "float: left; width:380px;">
                             <img src = "img/incitesvstime.svg" alt = "In citations vs. time" style="width:380px"/>
                             <p style="font-size : 120%;">Incoming Citations vs. time: for the average journal article, it appears that the total number of incoming citations increases relatively linearly with time. This gets noisy / tails off towards the end, as the number of publications in this database with that age goes to zero.</p>
@@ -181,233 +178,60 @@
             </div>
         </div>
     </section>
-
-    <!-- Live Demo Section -->
-    <section id="livedemo" class="content-section text-center">
-        <div class="livedemo-section">
-            <div class="container">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <h2>Live Demo</h2>
-                    <p>Dynamically generate citation networks, co-authorship networks and related articles here:</p>
-                    <a href="http://app.citationexplorer.hoppmann.me" class="btn btn-default btn-lg">Live Demo</a>
+    
+    <section id="demo">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Live Demo</h2>
+                    <hr class="light">
+                    <p class="text">Dynamically explore citation networks, co-authorship networks and related articles:</p>
+                    <a href="http://app.citationexplorer.hoppmann.me/" class="btn btn-primary btn-xl">Launch Demo</a>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Static Demo  -->
-    <section id="staticdemo" class="content-section text-center">
-        <div class="staticdemo-section">
-            <div class="container">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <h2>Static example plots from the live demo</h2>
-                    <p>In case the live demo is down, this is what one would see (try interacting with the graph!). All functionality is disabled (can't follow links in graph networks, author links are just images, etc), except it is possible to interact with the provided citation network graph.</p>
-                    <img src = "img/statichead.png" alt = "Top static demo" style="width:800px"/>
-                    <div id = "plotarea"></div>
-                    <img src = "img/staticfoot.png" alt = "Bottom static demo" style="width:800px"/>
-                    <img src = "img/staticauthor.png" alt = "Static co-authorship graph" style="width:800px"/>
+    
+    <section id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                    <h2 class="section-heading">Contact</h2>
+                    <hr class="primary">
+                </div>
+                <div class="col-lg-4 col-lg-offset-2 text-center">
+                    <i class="fa fa-github fa-3x sr-contact"></i>
+                    <p><a href="https://github.com/eric11">https://github.com/eric11</a></p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fa fa-envelope-o fa-3x sr-contact"></i>
+                    <p><a href="mailto:eric@hoppmann.me">eric@hoppmann.me</a></p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="container content-section text-center">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <h2>Contact</h2>
-                <p><a href="mailto:eric@hoppmann.me">eric@hoppmann.me</a>
-                </p>
-                <ul class="list-inline banner-social-buttons">
-                    <li>
-                        <a href="https://github.com/eric11" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                    </li>
-                </ul>
+            <div class="row">
+            	<div class="col-lg-8 col-lg-offset-2 text-center">
+            	<br>
+            	<br>
+            	<br>
+            		Copyright © Eric Hoppmann 2016
+            	</div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container text-center">
-            <p>Copyright &copy; Eric Hoppmann 2016</p>
-        </div>
-    </footer>
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Plugin JavaScript -->
-    <script src="js/jquery.easing.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="vendor/scrollreveal/scrollreveal.min.js"></script>
+    <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 
-    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="js/grayscale.js"></script>
-
-    <!-- Static demo script -->
-    <script>
-		// get the data
-        var json = getData()
-        
-		var width = 800,
-	        height = 800;
-
-	    var force = d3.layout.force()
-	        .nodes(json.nodes)
-	        .links(json.links)
-	        .size([width, height])
-	        .linkDistance(30)
-	        .charge(-300)
-	        .on("tick", tick)
-	        .start();
-
-	    var svg = d3.select("#plotarea").append("svg")
-	        .attr("width", width)
-	        .attr("height", height);
-
-        svg.append("rect")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .attr("fill", "black");
-
-	    // build the arrow.
-	    svg.append("svg:defs").selectAll("marker")
-	        .data(["end"]) // Different link/path types can be defined here
-	        .enter().append("svg:marker") // This section adds in the arrows
-	        .attr("id", String)
-	        .attr("viewBox", "0 -5 10 10")
-	        .attr("refX", 15)
-	        .attr("refY", -1.5)
-	        .attr("markerWidth", 6)
-	        .attr("markerHeight", 6)
-	        .attr("fill", "#4c4c4c")
-	        .attr("orient", "auto")
-	        .append("svg:path")
-	        .attr("d", "M0,-5L10,0L0,5");
-
-	    // add the links and the arrows
-	    var path = svg.append("svg:g").selectAll("path")
-	        .data(force.links())
-	        .enter().append("svg:path")
-	        //    .attr("class", function(d) { return "link " + d.type; })
-	        .attr("class", "link")
-	        .attr("marker-end", "url(#end)");
-
-	    // make it so that nodes remain fixed after user drags them to new location
-	    var drag = force.drag()
-	        .on("dragstart", dragstart)
-	        .on("dragend", dragend);
-	    
-	    function dragstart(d) {
-	          d3.select(this).classed("fixed", d.fixed = true);
-	    }
-	    
-	    function dragend(d) {
-	          d3.select(this).classed("fixed", d.fixed = true);
-	    }
-	    
-	    // define the nodes
-	    var node = svg.selectAll(".node")
-	        .data(force.nodes())
-	        .enter().append("g")
-	        .attr("class", "node")
-	        .on("mouseover", mouseover)
-	        .on("mouseout", mouseout)
-            .on("mousemove", mousemove)
-	        .call(drag);
-
-	    // add the nodes
-	    node.append("circle")
-	        .style("fill", function(d) { return d.color})
-	        .attr("r", 6);
-
-	    // add the text 
-	    node.append("text")
-	        .attr("x", 12)
-	        .attr("dy", ".31em")
-	        .style("fill", "white")
-	        .style("opacity", .8)
-	        .text(function(d) {
-	            return d.ln;
-	        });
-
-	    // add the curvy lines
-	    function tick() {
-	        path.attr("d", function(d) {
-	            var dx = d.target.x - d.source.x,
-	                dy = d.target.y - d.source.y,
-	                dr = Math.sqrt(dx * dx + dy * dy);
-	            return "M" +
-	                d.source.x + "," +
-	                d.source.y + "A" +
-	                dr + "," + dr + " 0 0,1 " +
-	                d.target.x + "," +
-	                d.target.y;
-	        });
-
-	        node
-	            .attr("transform", function(d) {
-	                return "translate(" + d.x + "," + d.y + ")";
-	            });
-	    }
-	    var tooltip = d3.select("body")
-            .append("div")
-            .style("position", "absolute")
-            .style("z-index", "10")
-            .style("visibility", "hidden")
-            .style("background-color", "darkgrey") //fallback for browsers without rgba support
-            .style("background-color", "rgba(0,0,0,.75)")
-            .style("border-radius", "5px");
-            //.text("a simple tooltip");
-            
-        //action to take on mousemove
-        function mousemove () {
-                tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
-        }
-            
-	    //action to take on mouseover
-	    function mouseover(d) {
-                tooltip.style("visibility", "visible")
-                tooltip.html(d.meta) //changed to .html from .text to enable html like line breaks in d.meta
-	            d3.select(this).select("circle").transition()
-	                .duration(400)
-	                .attr("r", 9)
-	            d3.select(this).select("text")
-	                .attr("dy", ".31em")
-	                .style("fill", "black")
-	                .style("opacity", 0);
-	        }
-	    //action to take on mouseout
-	    function mouseout() {
-                tooltip.style("visibility", "hidden");
-	            d3.select(this).select("circle").transition()
-	                .duration(400)
-	                .attr("r", 6)
-	            d3.select(this).select("text").transition()
-	                .duration(400)
-	                .attr("dy", ".31em")
-	                .style("font", "10px serif")
-	                .style("fill", "black")
-	                .style("opacity", .8);
-	        }
-	    
-	    
-	    // action to take on mouse click
-	    function click(d) {
-	        if (d3.event.defaultPrevented) return; // prevent following links when dragging
-	        window.location.href = "index?PMID=" + d.name;
-	        
-	    };
-        
-        function getData() {
-                return {"directed": true, "graph": {}, "nodes": [{"color": "ca0020", "ln": "Khatami", "meta": "Title: Chronic Inflammation: Synergistic Interactions of Recruiting Macrophages (TAMs) and Eosinophils (Eos) with Host Mast Cells (MCs) and Tumorigenesis in CALTs. M-CSF, Suitable Biomarker for Cancer Diagnosis!<br>Authors: and Mahin Khatami<br>", "name": 24473090}, {"color": "ca0020", "ln": "O'Regan", "meta": "Title: <italic>Brugia malayi</italic><br>Authors: No\u00eblle Louise O'Regan, Svenja Steinfelder, Gopinath Venugopal, Gopala B. Rao, Richard Lucius, Aparna Srikantam, and Susanne Hartmann<br>", "name": 25275395}, {"color": "ca0020", "ln": "Parco", "meta": "Title: Autologous cord blood harvesting in North Eastern Italy: ethical questions and emerging hopes for curing diabetes and celiac disease<br>Authors: Sergio Parco, and Fulvia Vascotto<br>", "name": 22807638}, {"color": "ca0020", "ln": "Alam", "meta": "Title: BMC Medicine: a decade of open access medical research<br>Authors: Sabina Alam, and Jigisha Patel<br>", "name": 24405514}, {"color": "ca0020", "ln": "Botella", "meta": "Title: Research on potential biomarkers in hereditary hemorrhagic telangiectasia<br>Authors: Luisa-Mar\u00eda Botella, Virginia Albi\u00f1ana, Luisa Ojeda-Fernandez, Lucia Recio-Poveda, and Carmelo Bernab\u00e9u<br>", "name": 25873934}, {"color": "ca0020", "ln": "Pantziarka", "meta": "Title: The Repurposing Drugs in Oncology (ReDO) Project<br>Authors: Pan Pantziarka, Gauthier Bouche, Lydie Meheus, Vidula Sukhatme, Vikas P. Sukhatme, and P. Vikas<br>", "name": 25075216}, {"color": "f4a582", "ln": "McGrath", "meta": "Title: The Role of Coinhibitory Signaling Pathways in Transplantation and Tolerance<br>Authors: Martina M. McGrath, and Nader Najafian<br>", "name": 22566929}, {"color": "f4a582", "ln": "Dupr\u00e9", "meta": "Title: T Lymphocyte Migration: An Action Movie Starring the Actin and Associated Actors<br>Authors: Lo\u00efc Dupr\u00e9, Ra\u00efssa Houmadi, Catherine Tang, and Javier Rey-Barroso<br>", "name": 26635800}, {"color": "ca0020", "ln": "Raker", "meta": "Title: Tolerogenic Dendritic Cells for Regulatory T Cell Induction in Man<br>Authors: Verena K. Raker, Matthias P. Domogalla, and Kerstin Steinbrink<br>", "name": 26617604}, {"color": "ca0020", "ln": "Garg", "meta": "Title: Molecular and Translational Classifications of DAMPs in Immunogenic Cell Death<br>Authors: Abhishek D. Garg, Lorenzo Galluzzi, Lionel Apetoh, Thais Baert, Raymond B. Birge, Jos\u00e9 Manuel Bravo-San Pedro, Karine Breckpot, David Brough, Ricardo Chaurio, Mara Cirone, An Coosemans, Pierre G. Coulie, Dirk De Ruysscher, Luciana Dini, Peter de Witte, Aleksandra M. Dudek-Peric, Alberto Faggioni, Jitka Fucikova, Udo S. Gaipl, Jakub Golab, Marie-Lise Gougeon, Michael R. Hamblin, Akseli Hemminki, Martin Herrmann, James W. Hodge, Oliver Kepp, Guido Kroemer, Dmitri V. Krysko, Walter G. Land, Frank Madeo, Angelo A. Manfredi, Stephen R. Mattarollo, Christian Maueroder, Nicol\u00f2 Merendino, Gabriele Multhoff, Thomas Pabst, Jean-Ehrland Ricci, Chiara Riganti, Erminia Romano, Nicole Rufo, Mark J. Smyth, J\u00fcrgen Sonnemann, Radek Spisek, John Stagg, Erika Vacchelli, Peter Vandenabeele, Lien Vandenberk, Benoit J. Van den Eynde, Stefaan Van Gool, Francesca Velotti, Laurence Zitvogel, and Patrizia Agostinis<br>", "name": 26635802}, {"color": "92c5de", "ln": 17112751, "meta": "", "name": 17112751}, {"color": "ca0020", "ln": "Kalla", "meta": "Title: MicroRNAs: new players in IBD<br>Authors: R Kalla, N T Ventham, N A Kennedy, J F Quintana, E R Nimmo, A H Buck, and J Satsangi<br>", "name": 25475103}, {"color": "f4a582", "ln": "Hofmeyer", "meta": "Title: The PD-1/PD-L1 (B7-H1) Pathway in Chronic Infection-Induced Cytotoxic T Lymphocyte Exhaustion<br>Authors: Kimberly A. Hofmeyer, Hyungjun Jeon, and Xingxing Zang<br>", "name": 21960736}, {"color": "92c5de", "ln": 12847137, "meta": "", "name": 12847137}, {"color": "ca0020", "ln": "Jend\u017eelovsk\u00e1", "meta": "Title: Hypericin in the Light and in the Dark: Two Sides of the Same Coin<br>Authors: Zuzana Jend\u017eelovsk\u00e1, Rastislav Jend\u017eelovsk\u00fd, Barbora Kuch\u00e1rov\u00e1, and Peter Fedoro\u010dko<br>", "name": 27200034}, {"color": "ca0020", "ln": "Yaochite", "meta": "Title: Therapeutic efficacy and biodistribution of allogeneic mesenchymal stem cells delivered by intrasplenic and intrapancreatic routes in streptozotocin-induced diabetic mice<br>Authors: Juliana Navarro Ueda Yaochite, Carolina Caliari-Oliveira, Lucas Eduardo Botelho de Souza, Louren\u00e7o Sbragia Neto, Patr\u00edcia Vianna Bonini Palma, Dimas Tadeu Covas, Kelen Cristina Ribeiro Malmegrim, Julio C\u00e9sar Voltarelli, and Eduardo Ant\u00f4nio Donadi<br>", "name": 25884215}, {"color": "ca0020", "ln": "Coppieters", "meta": "Title: Functional Redundancy of CXCR3/CXCL10 Signaling in the Recruitment of Diabetogenic Cytotoxic T Lymphocytes to Pancreatic Islets in a Virally Induced Autoimmune Diabetes Model<br>Authors: Ken T. Coppieters, Natalie Amirian, Philippe P. Pagni, Carmen Baca Jones, Anna Wiberg, Stanley Lasch, Edith Hintermann, Urs Christen, and Matthias G. von Herrath<br>", "name": 23434930}, {"color": "ca0020", "ln": "Torales-Carde\u00f1a", "meta": "Title: Cross Talk between Proliferative, Angiogenic, and Cellular Mechanisms Orchestred by HIF-1<br>Authors: Azael Torales-Carde\u00f1a, Isa\u00ed Mart\u00ednez-Torres, Sandra Rodr\u00edguez-Mart\u00ednez, Fernando G\u00f3mez-Ch\u00e1vez, Juan C. Cancino-D\u00edaz, Ernesto A. V\u00e1zquez-S\u00e1nchez, and Mario E. Cancino-D\u00edaz<br>", "name": 26136626}, {"color": "ca0020", "ln": "Baru", "meta": "Title: Optimal Isolation of Functional Foxp3<br>Authors: Abdul Mannan Baru, Christopher Untucht, Venkateswaran Ganesh, Christina Hesse, Christian T. Mayer, and Tim Sparwasser<br>", "name": 22957107}, {"color": "ca0020", "ln": "Hashemian", "meta": "Title: Mesenchymal Stem Cells: Rising Concerns over Their Application in Treatment of Type One Diabetes Mellitus<br>Authors: Seyed Jafar Hashemian, Marjan Kouhnavard, and Ensieh Nasli-Esfahani<br>", "name": 26576437}, {"color": "ca0020", "ln": "Ramsay", "meta": "Title: Environmental and Metabolic Sensors That Control T Cell Biology<br>Authors: George Ramsay, and Doreen Cantrell<br>", "name": 25852681}, {"color": "ca0020", "ln": "Bassi", "meta": "Title: Immune Regulatory Properties of Allogeneic Adipose-Derived Mesenchymal Stem Cells in the Treatment of Experimental Autoimmune Diabetes<br>Authors: \u00canio J. Bassi, Pedro M.M. Moraes-Vieira, Carla S.R. Moreira-S\u00e1, Danilo C. Almeida, Leonardo M. Vieira, Cl\u00e1udia S. Cunha, Meire I. Hiyane, Alexandre S. Basso, Alvaro Pacheco-Silva, and Niels O.S. C\u00e2mara<br>", "name": 22688334}, {"color": "ca0020", "ln": "Waugh", "meta": "Title: Targeting Transcriptional Regulators of CD8+ T Cell Dysfunction to Boost Anti-Tumor Immunity<br>Authors: Katherine A. Waugh, Sonia M. Leach, and Jill E. Slansky<br>", "name": 26393659}, {"color": "ca0020", "ln": "Scognamiglio", "meta": "Title: Variability in Immunohistochemical Detection of Programmed Death Ligand 1 (PD-L1) in Cancer Tissue Types<br>Authors: Giosu\u00e8 Scognamiglio, Anna De Chiara, Maurizio Di Bonito, Fabiana Tatangelo, Nunzia Simona Losito, Annamaria Anniciello, Rossella De Cecio, Crescenzo D\u2019Alterio, Stefania Scala, Monica Cantile, and Gerardo Botti<br>", "name": 27213372}, {"color": "ca0020", "ln": "Zhang", "meta": "Title: Synergic silencing of costimulatory molecules prevents cardiac allograft rejection<br>Authors: Xusheng Zhang, Yanling Liu, Guangfeng Zhang, Jun Shi, Xiao Zhang, Xiufen Zheng, Alex T Jiang, Zhu-Xu Zhang, Nathan Johnston, King Sun Siu, Ruiqi Chen, Dameng Lian, David Koos, Douglas Quan, and Wei-Ping Min<br>", "name": 24886282}, {"color": "92c5de", "ln": 17116737, "meta": "", "name": 17116737}, {"color": "ca0020", "ln": "Kyi", "meta": "Title: Ipilimumab in patients with melanoma and autoimmune disease<br>Authors: Chrisann Kyi, Richard D Carvajal, Jedd D Wolchok, and Michael A Postow<br>", "name": 25349698}, {"color": "ca0020", "ln": "Xu", "meta": "Title: The roles of stem cell memory T cells in hematological malignancies<br>Authors: Ling Xu, Yikai Zhang, Gengxin Luo, and Yangqiu Li<br>", "name": 26462561}, {"color": "92c5de", "ln": 12016203, "meta": "", "name": 12016203}, {"color": "ca0020", "ln": "Pol", "meta": "Title: Trial Watch:<br>Authors: Jonathan Pol, Norma Bloy, Florine Obrist, Alexander Eggermont, J\u00e9r\u00f4me Galon, Isabelle Cremer, Philippe Erbs, Jean-Marc Limacher, Xavier Preville, Laurence Zitvogel, Guido Kroemer, and Lorenzo Galluzzi<br>", "name": 25097804}, {"color": "ca0020", "ln": "D\u2019souza", "meta": "Title: Mesenchymal stem/stromal cells as a delivery platform in cell and gene therapies<br>Authors: Naomi D\u2019souza, Filippo Rossignoli, Giulia Golinelli, Giulia Grisendi, Carlotta Spano, Olivia Candini, Satoru Osturu, Fabio Catani, Paolo Paolucci, Edwin M. Horwitz, and Massimo Dominici<br>", "name": 26265166}, {"color": "92c5de", "ln": 14688337, "meta": "", "name": 14688337}, {"color": "ca0020", "ln": "Gato-Ca\u00f1as", "meta": "Title: A core of kinase-regulated interactomes defines the neoplastic MDSC lineage<br>Authors: Maria Gato-Ca\u00f1as, Xabier Martinez de Morentin, Idoia Blanco-Luquin, Joaquin Fernandez-Irigoyen, Isabel Zudaire, Therese Liechtenstein, Hugo Arasanz, Teresa Lozano, Noelia Casares, Apirat Chaikuad, Stefan Knapp, David Guerrero-Setas, David Escors, Grazyna Kochan, and Enrique Santamar\u00eda<br>", "name": 26320174}, {"color": "ca0020", "ln": "Chiappelli", "meta": "Title: Ebola: translational science considerations<br>Authors: Francesco Chiappelli, Andre Bakhordarian, April D Thames, Angela M Du, Allison L Jan, Melissa Nahcivan, Mia T Nguyen, Nateli Sama, Ercolano Manfrini, Francesco Piva, Rafael Malagoli Rocha, and Carl A Maida<br>", "name": 25592846}, {"color": "ca0020", "ln": "Chinnadurai", "meta": "Title: From Single Nucleotide Polymorphisms to Constant Immunosuppression: Mesenchymal Stem Cell Therapy for Autoimmune Diseases<br>Authors: Raghavan Chinnadurai, Edmund K. Waller, Jacques Galipeau, and Ajay K. Nooka<br>", "name": 24350294}, {"color": "ca0020", "ln": "Jin", "meta": "Title: MicroRNA Mechanisms of Action: What have We Learned from Mice?<br>Authors: Hyun Yong Jin, and Changchun Xiao<br>", "name": 26635864}, {"color": "f4a582", "ln": "Bakdash", "meta": "Title: The nature of activatory and tolerogenic dendritic cell-derived signal II<br>Authors: Ghaith Bakdash, Simone P. Sittig, Tjeerd van Dijk, Carl G. Figdor, and I. Jolanda M. de Vries<br>", "name": 23450201}, {"color": "ca0020", "ln": "Mandl", "meta": "Title: Evaluation of the BDCA2-DTR Transgenic Mouse Model in Chronic and Acute Inflammation<br>Authors: Manuela Mandl, Maik Drechsler, Yvonne Jansen, Carlos Neideck, Heidi Noels, Alexander Faussner, Oliver Soehnlein, Christian Weber, and Yvonne D\u00f6ring<br>", "name": 26252890}, {"color": "f4a582", "ln": "Bauzon", "meta": "Title: Armed Therapeutic Viruses \u2013 A Disruptive Therapy on the Horizon of Cancer Immunotherapy<br>Authors: Maxine Bauzon, and Terry Hermiston<br>", "name": 24605114}, {"color": "ca0020", "ln": "Aranda", "meta": "Title: Trial Watch<br>Authors: Fernando Aranda, Erika Vacchelli, Florine Obrist, Alexander Eggermont, J\u00e9r\u00f4me Galon, Wolf Herv\u00e9 Fridman, Isabelle Cremer, Eric Tartour, Laurence Zitvogel, Guido Kroemer, and Lorenzo Galluzzi<br>", "name": 25050207}, {"color": "ca0020", "ln": "Lussier", "meta": "Title: Combination immunotherapy with \u03b1-CTLA-4 and \u03b1-PD-L1 antibody blockade prevents immune escape and leads to complete control of metastatic osteosarcoma<br>Authors: Danielle M Lussier, John L Johnson, Pooja Hingorani, and Joseph N Blattman<br>", "name": 25992292}, {"color": "ca0020", "ln": "L\u00e4ubli", "meta": "Title: Acute heart failure due to autoimmune myocarditis under pembrolizumab treatment for metastatic melanoma<br>Authors: Heinz L\u00e4ubli, Cathrin Balmelli, Matthias Bossard, Otmar Pfister, Kathrin Glatz, and Alfred Zippelius<br>", "name": 25901283}, {"color": "ca0020", "ln": "Cao", "meta": "Title: High Resolution Intravital Imaging of Subcellular Structures of Mouse Abdominal Organs Using a Microstage Device<br>Authors: Liqin Cao, Satoru Kobayakawa, Atsushi Yoshiki, and Kuniya Abe<br>", "name": 22479464}, {"color": "f4a582", "ln": "Sui", "meta": "Title: The anticancer immune response of anti-PD-1/PD-L1 and the genetic determinants of response to anti-PD-1/PD-L1 antibodies in cancer patients<br>Authors: Xinbing Sui, Junhong Ma, Weidong Han, Xian Wang, Yong Fang, Da Li, Hongming Pan, and Li Zhang<br>", "name": 26305724}, {"color": "92c5de", "ln": 9108078, "meta": "", "name": 9108078}, {"color": "ca0020", "ln": "Kokolus", "meta": "Title: Stressful Presentations: Mild Cold Stress in Laboratory Mice Influences Phenotype of Dendritic Cells in Na\u00efve and Tumor-Bearing Mice<br>Authors: Kathleen M. Kokolus, Haley M. Spangler, Benjamin J. Povinelli, Matthew R. Farren, Kelvin P. Lee, and Elizabeth A. Repasky<br>", "name": 24575090}, {"color": "ca0020", "ln": "Vacchelli", "meta": "Title: Trial watch<br>Authors: Erika Vacchelli, Fernando Aranda, Florine Obrist, Alexander Eggermont, J\u00e9r\u00f4me Galon, Isabelle Cremer, Laurence Zitvogel, Guido Kroemer, and Lorenzo Galluzzi<br>", "name": 25083328}, {"color": "ca0020", "ln": "Feng", "meta": "Title: Expression of programmed cell death ligand 1 (PD-L1) and prevalence of tumor-infiltrating lymphocytes (TILs) in chordoma<br>Authors: Yong Feng, Jacson Shen, Yan Gao, Yunfei Liao, Gregory Cote, Edwin Choy, Ivan Chebib, Henry Mankin, Francis Hornicek, and Zhenfeng Duan<br>", "name": 25871477}, {"color": "92c5de", "ln": 17964663, "meta": "", "name": 17964663}, {"color": "f4a582", "ln": "Kochupurakkal", "meta": "Title: Blockade of the Programmed Death-1 (PD1) Pathway Undermines Potent Genetic Protection from Type 1 Diabetes<br>Authors: Nora M. Kochupurakkal, Annie J. Kruger, Sudipta Tripathi, Bing Zhu, La Tonya Adams, Daniel B. Rainbow, Aldo Rossini, Dale L. Greiner, Mohamed H. Sayegh, Linda S. Wicker, and Indira Guleria<br>", "name": 24586872}, {"color": "92c5de", "ln": 15466619, "meta": "", "name": 15466619}, {"color": "92c5de", "ln": 11035773, "meta": "", "name": 11035773}, {"color": "ca0020", "ln": "Podrazil", "meta": "Title: Phase I/II clinical trial of dendritic-cell based immunotherapy (DCVAC/PCa) combined with chemotherapy in patients with metastatic, castration-resistant prostate cancer<br>Authors: Michal Podrazil, Rudolf Horvath, Etienne Becht, Daniela Rozkova, Pavla Bilkova, Klara Sochorova, Hana Hromadkova, Jana Kayserova, Katerina Vavrova, Jan Lastovicka, Petra Vrabcova, Katerina Kubackova, Zdenka Gasova, Ladislav Jarolim, Marek Babjuk, Radek Spisek, Jirina Bartunkova, and Jitka Fucikova<br>", "name": 26078335}, {"color": "ca0020", "ln": "de Sousa", "meta": "Title: Isolation and identification of <br>Authors: Lourimar Viana Nascimento F. de Sousa, Vera L\u00facia Santos, Andrea de Souza Monteiro, Marcus Vinic\u00edus Dias-Souza, Sirlei Garcia Marques, Elaine Speziali de Faria, Elaine Alves de Oliveira Assun\u00e7\u00e3o, Simone Gon\u00e7alves dos Santos, Juan Moises Zonis, Daniel Gomes de Alvarenga, Rodrigo Assun\u00e7\u00e3o de Holanda, Jaqueline Gontijo de Sousa, K\u00eania Val\u00e9ria dos Santos, and Maria Aparecida de Resende Stoianoff<br>", "name": 26905729}, {"color": "92c5de", "ln": 16765578, "meta": "", "name": 16765578}, {"color": "f4a582", "ln": "Jurewicz", "meta": "Title: Congenic Mesenchymal Stem Cell Therapy Reverses Hyperglycemia in Experimental Type 1 Diabetes<br>Authors: Mollie Jurewicz, Sunmi Yang, Andrea Augello, Jonathan G. Godwin, Robert F. Moore, Jamil Azzi, Paolo Fiorina, Mark Atkinson, Mohamed H. Sayegh, and Reza Abdi<br>", "name": 20841611}, {"color": "ca0020", "ln": "Huang", "meta": "Title: Feasibility of up-regulating CD4<br>Authors: Shuo Huang, Weizhi Wang, and Lijun Chi<br>", "name": 26347149}, {"color": "ca0020", "ln": "Zhao", "meta": "Title: Targeting insulin resistance in type 2 diabetes via immune modulation of cord blood-derived multipotent stem cells (CB-SCs) in stem cell educator therapy: phase I/II clinical trial<br>Authors: Yong Zhao, Zhaoshun Jiang, Tingbao Zhao, Mingliang Ye, Chengjin Hu, Huimin Zhou, Zhaohui Yin, Yana Chen, Ye Zhang, Shanfeng Wang, Jie Shen, Hatim Thaker, Summit Jain, Yunxiang Li, Yalin Diao, Yingjian Chen, Xiaoming Sun, Mary Beth Fisk, and Heng Li<br>", "name": 23837842}, {"color": "ca0020", "ln": "Garg", "meta": "Title: Editorial: Immunogenic Cell Death in Cancer: From Benchside Research to Bedside Reality<br>Authors: Abhishek D. Garg, and Patrizia Agostinis<br>", "name": 27066003}, {"color": "ca0020", "ln": "Bueno", "meta": "Title: Metabolic and Pancreatic Effects of Bone Marrow Mesenchymal Stem Cells Transplantation in Mice Fed High-Fat Diet<br>Authors: Patricia de Godoy Bueno, Juliana Navarro Ueda Yochite, Graziela Fernanda Derigge-Pisani, Kelen Cristina Ribeiro Malmegrim de Farias, Lucimar Retto da Silva de Av\u00f3, J\u00falio C\u00e9sar Voltarelli, and \u00c2ngela Merice de Oliveira Leal<br>", "name": 25923733}, {"color": "92c5de", "ln": 18056342, "meta": "", "name": 18056342}, {"color": "ca0020", "ln": "Tan", "meta": "Title: A quantitative analysis of therapeutic cancer vaccines in phase 2 or phase 3 trial<br>Authors: Amabel CL Tan, Anne Goubier, and Holbrook E. Kohrt<br>", "name": 26579225}, {"color": "92c5de", "ln": 12835480, "meta": "", "name": 12835480}, {"color": "ca0020", "ln": "Aranda", "meta": "Title: Trial Watch<br>Authors: Fernando Aranda, Erika Vacchelli, Florine Obrist, Alexander Eggermont, J\u00e9r\u00f4me Galon, Catherine Saut\u00e8s-Fridman, Isabelle Cremer, Jan Henrik ter Meulen, Laurence Zitvogel, Guido Kroemer, and Lorenzo Galluzzi<br>", "name": 25083332}, {"color": "92c5de", "ln": 8638107, "meta": "", "name": 8638107}, {"color": "ca0020", "ln": "Escacena", "meta": "Title: Bottlenecks in the Efficient Use of Advanced Therapy Medicinal Products Based on Mesenchymal Stromal Cells<br>Authors: Natalia Escacena, Elena Quesada-Hern\u00e1ndez, Vivian Capilla-Gonzalez, Bernat Soria, and Abdelkrim Hmadcha<br>", "name": 26273307}, {"color": "ca0020", "ln": "Gardiner", "meta": "Title: A Randomized, Double-Blind, Placebo-Controlled Assessment of BMS-936558, a Fully Human Monoclonal Antibody to Programmed Death-1 (PD-1), in Patients with Chronic Hepatitis C Virus Infection<br>Authors: David Gardiner, Jay Lalezari, Eric Lawitz, Michael DiMicco, Rheem Ghalib, K. Rajender Reddy, Kyong-Mi Chang, Mark Sulkowski, Steven O\u2019 Marro, Jeffrey Anderson, Bing He, Vikram Kansra, Fiona McPhee, Megan Wind-Rotolo, Dennis Grasela, Mark Selby, Alan J. Korman, and Israel Lowy<br>", "name": 23717490}, {"color": "f4a582", "ln": "HAN", "meta": "Title: Role of programmed death ligands in effective T-cell interactions in extranodal natural killer/T-cell lymphoma<br>Authors: LIJUAN HAN, FEIFEI LIU, RUPING LI, ZHAOMING LI, XINFENG CHEN, ZHIYUAN ZHOU, XUDONG ZHANG, TENGPENG HU, YI ZHANG, KEN YOUNG, SUKE SUN, JIANGUO WEN, and MINGZHI ZHANG<br>", "name": 25202350}, {"color": "f4a582", "ln": "Madorsky Rowdo", "meta": "Title: Immunotherapy in Cancer: A Combat between Tumors and the Immune System; You Win Some, You Lose Some<br>Authors: Florencia Paula Madorsky Rowdo, Antonela Baron, Mariela Urrutia, and Jos\u00e9 Mordoh<br>", "name": 25859247}, {"color": "f4a582", "ln": "Nicholas", "meta": "Title: Current Trends in Glioblastoma Multiforme Treatment: Radiation Therapy and Immune Checkpoint Inhibitors<br>Authors: Sarah Nicholas, Dimitris Mathios, Jacob Ruzevick, Christopher Jackson, Isaac Yang, and Michael Lim<br>", "name": 24904882}, {"color": "ca0020", "ln": "Passaro", "meta": "Title: The oncolytic virus <br>Authors: Carmela Passaro, Francesco Borriello, Viviana Vastolo, Sarah Di Somma, Eloise Scamardella, Vincenzo Gigantino, Renato Franco, Gianni Marone, and Giuseppe Portella<br>", "name": 26625205}, {"color": "ca0020", "ln": "Hew", "meta": "Title: The Possible Future Roles for iPSC-Derived Therapy for Autoimmune Diseases<br>Authors: Meilyn Hew, Kevin O\u2019Connor, Michael J. Edel, and Michaela Lucas<br>", "name": 26239553}, {"color": "ca0020", "ln": "Momma", "meta": "Title: Neuroimmune signaling by extracellular vesicles<br>Authors: and Stefan Momma<br>", "name": 26387131}, {"color": "f4a582", "ln": "Stein", "meta": "Title: T Cell Motility as Modulator of Interactions with Dendritic Cells<br>Authors: and Jens V. Stein<br>", "name": 26579132}, {"color": "ca0020", "ln": "Osorio", "meta": "Title: Role of Dendritic Cells in the Induction of Lymphocyte Tolerance<br>Authors: Fabiola Osorio, Camila Fuentes, Mercedes N. L\u00f3pez, Flavio Salazar-Onfray, and Ferm\u00edn E. Gonz\u00e1lez<br>", "name": 26539197}, {"color": "ca0020", "ln": "Lindenberg", "meta": "Title: Mouse Cytomegalovirus infection overrules T regulatory cell suppression on natural killer cells<br>Authors: Marc Lindenberg, Gulhas Solmaz, Franz Puttur, and Tim Sparwasser<br>", "name": 25108672}, {"color": "ca0020", "ln": "Hung", "meta": "Title: A platform for actively loading cargo RNA to elucidate limiting steps in EV-mediated delivery<br>Authors: Michelle E. Hung, and Joshua N. Leonard<br>", "name": 27189348}, {"color": "f4a582", "ln": "Zhao", "meta": "Title: Regulation of Neuroinflammation through Programed Death-1/Programed Death Ligand Signaling in Neurological Disorders<br>Authors: Shangfeng Zhao, Fengwu Li, Rehana K. Leak, Jun Chen, and Xiaoming Hu<br>", "name": 25232304}, {"color": "f4a582", "ln": "van der Werf", "meta": "Title: Th2 Cell-Intrinsic Hypo-Responsiveness Determines Susceptibility to Helminth Infection<br>Authors: Nienke van der Werf, Stephen A. Redpath, Miyuki Azuma, Hideo Yagita, and Matthew D. Taylor<br>", "name": 23516361}, {"color": "ca0020", "ln": "Linsley", "meta": "Title: The Relationship of Immune Cell Signatures to Patient Survival Varies within and between Tumor Types<br>Authors: Peter S. Linsley, Damien Chaussabel, and Cate Speake<br>", "name": 26398410}, {"color": "ca0020", "ln": "Liu", "meta": "Title: All-trans retinoic acid arrests cell cycle in leukemic bone marrow stromal cells by increasing intercellular communication through connexin 43-mediated gap junction<br>Authors: Yao Liu, Qin Wen, Xue-lian Chen, Shi-jie Yang, Lei Gao, Li Gao, Cheng Zhang, Jia-li Li, Xi-xi Xiang, Kai Wan, Xing-hua Chen, Xi Zhang, and Jiang-fan Zhong<br>", "name": 26446715}, {"color": "f4a582", "ln": "Li", "meta": "Title: PD-L1\u2013Driven Tolerance Protects Neurogenin3-Induced Islet Neogenesis to Reverse Established Type 1 Diabetes in NOD Mice<br>Authors: Rongying Li, Jeongkyung Lee, Mi-sun Kim, Victoria Liu, Mousumi Moulik, Haiyan Li, Qing Yi, Aini Xie, Wenhao Chen, Lina Yang, Yimin Li, Tsung Huang Tsai, Kazuhiro Oka, Lawrence Chan, and Vijay Yechoor<br>", "name": 25332429}, {"color": "ca0020", "ln": "TANG", "meta": "Title: Autografting of bone marrow mesenchymal stem cells alleviates streptozotocin-induced diabetes in miniature pigs: Real-time tracing with MRI <br>Authors: KUANXIAO TANG, XIAOYAN XIAO, DAYUE LIU, YUNFENG SHEN, YINGMING CHEN, YU WANG, BAOYING LI, FEI YU, DEDONG MA, JINHUA YAN, HUA LIANG, DAIZHI YANG, and JIANPING WENG<br>", "name": 24714958}, {"color": "ca0020", "ln": "Delgoffe", "meta": "Title: Sugar, fat, and protein: new insights into what T cells crave<br>Authors: Greg M. Delgoffe, and Jonathan D. Powell<br>", "name": 25665466}, {"color": "ca0020", "ln": "Xu", "meta": "Title: Secondary cytoreduction surgery improves prognosis in platinum-sensitive recurrent ovarian cancer<br>Authors: Xia Xu, Xiaoxiang Chen, Zhiqin Dai, Fei Deng, Junwei Qu, and Jing Ni<br>", "name": 24059600}, {"color": "ca0020", "ln": "Garg", "meta": "Title: Resistance to anticancer vaccination effect is controlled by a cancer cell-autonomous phenotype that disrupts immunogenic phagocytic removal<br>Authors: Abhishek D. Garg, Sanne Elsen, Dmitri V. Krysko, Peter Vandenabeele, Peter de Witte, and Patrizia Agostinis<br>", "name": 26314964}, {"color": "ca0020", "ln": "Kemp", "meta": "Title: Exploring Reovirus Plasticity for Improving Its Use as Oncolytic Virus<br>Authors: Vera Kemp, Rob C. Hoeben, and Diana J. M. van den Wollenberg<br>", "name": 26712782}, {"color": "ca0020", "ln": "Jalili", "meta": "Title: Fibroblast Cell-Based Therapy for Experimental Autoimmune Diabetes<br>Authors: Reza B. Jalili, Yun Zhang, Azadeh Hosseini-Tabatabaei, Ruhangiz T. Kilani, Mohsen Khosravi Maharlooei, Yunyuan Li, Sanam Salimi Elizei, Garth L. Warnock, and Aziz Ghahary<br>", "name": 26765526}, {"color": "ca0020", "ln": "Christen", "meta": "Title: Blockade but Not Overexpression of the Junctional Adhesion Molecule C Influences Virus-Induced Type 1 Diabetes in Mice<br>Authors: Selina Christen, Ken Coppieters, Kerstin Rose, Martin Holdener, Monika Bayer, Josef M. Pfeilschifter, Edith Hintermann, Matthias G. von Herrath, Michel Aurrand-Lions, Beat A. Imhof, and Urs Christen<br>", "name": 23372751}, {"color": "f4a582", "ln": "Darlak", "meta": "Title: Host bone marrow-derived IL-12 enhances donor T cell engraftment in a mouse model of bone marrow transplantation<br>Authors: Katarzyna A Darlak, Ying Wang, Jian-Ming Li, Wayne AC Harris, Cynthia R Giver, Chunzi Huang, and Edmund K Waller<br>", "name": 24580829}, {"color": "ca0020", "ln": "Delgado", "meta": "Title: Modulation of Autoimmune T-Cell Memory by Stem Cell Educator Therapy: Phase 1/2 Clinical Trial<br>Authors: Elias Delgado, Marcos Perez-Basterrechea, Beatriz Suarez-Alvarez, Huimin Zhou, Eva Martinez Revuelta, Jose Maria Garcia-Gala, Silvia Perez, Maria Alvarez-Viejo, Edelmiro Menendez, Carlos Lopez-Larrea, Ruifeng Tang, Zhenlong Zhu, Wei Hu, Thomas Moss, Edward Guindi, Jesus Otero, and Yong Zhao<br>", "name": 26844283}, {"color": "ca0020", "ln": "Azzi", "meta": "Title: The Novel Therapeutic Effect of Phosphoinositide 3-Kinase-\u03b3 Inhibitor AS605240 in Autoimmune Diabetes<br>Authors: Jamil Azzi, Robert F. Moore, Wassim Elyaman, Marwan Mounayar, Najib El Haddad, Sunmi Yang, Mollie Jurewicz, Ayumi Takakura, Alessandra Petrelli, Paolo Fiorina, Thomas Ruckle, and Reza Abdi<br>", "name": 22403300}, {"color": "ca0020", "ln": "H\u00e9ninger", "meta": "Title: Augmenting Antitumor Immune Responses with Epigenetic Modifying Agents<br>Authors: Erika H\u00e9ninger, Timothy E. G. Krueger, and Joshua M. Lang<br>", "name": 25699047}, {"color": "ca0020", "ln": "Ungerechts", "meta": "Title: Moving oncolytic viruses into the clinic: clinical-grade production, purification, and characterization of diverse oncolytic viruses<br>Authors: Guy Ungerechts, Sascha Bossow, Barbara Leuchs, Per S Holm, Jean Rommelaere, Matt Coffey, Rob Coffin, John Bell, and Dirk M Nettelbeck<br>", "name": 27088104}, {"color": "f4a582", "ln": "Chistiakov", "meta": "Title: Plasmacytoid dendritic cells: development, functions, and role in atherosclerotic inflammation<br>Authors: Dimitry A. Chistiakov, Alexander N. Orekhov, Igor A. Sobenin, and Yuri V. Bobryshev<br>", "name": 25120492}, {"color": "92c5de", "ln": 16799470, "meta": "", "name": 16799470}, {"color": "ca0020", "ln": "Bezu", "meta": "Title: Combinatorial Strategies for the Induction of Immunogenic Cell Death<br>Authors: Lucillia Bezu, Ligia C. Gomes-da-Silva, Heleen Dewitte, Karine Breckpot, Jitka Fucikova, Radek Spisek, Lorenzo Galluzzi, Oliver Kepp, and Guido Kroemer<br>", "name": 25964783}, {"color": "ca0020", "ln": "Morel", "meta": "Title: Dendritic Cell Control of Immune Responses<br>Authors: Penelope A. Morel, and Lisa H. Butterfield<br>", "name": 25699058}, {"color": "ca0020", "ln": "Al-Chaqmaqchi", "meta": "Title: The Role of Programmed Cell Death Ligand-1 (PD-L1/CD274) in the Development of Graft versus Host Disease<br>Authors: Heevy Al-Chaqmaqchi, Behnam Sadeghi, Manuchehr Abedi-Valugerdi, Sulaiman Al-Hashmi, Mona Fares, Raoul Kuiper, Joachim Lundahl, Moustapha Hassan, and Ali Moshfegh<br>", "name": 23593203}, {"color": "92c5de", "ln": 18759926, "meta": "", "name": 18759926}, {"color": "f4a582", "ln": "Asmar", "meta": "Title: Clinical utility of nivolumab in the treatment of advanced melanoma<br>Authors: Ramsey Asmar, Jessica Yang, and Richard D Carvajal<br>", "name": 27013881}, {"color": "ca0020", "ln": "Zibelman", "meta": "Title: Autoimmune inner ear disease in a melanoma patient treated with pembrolizumab<br>Authors: Matthew Zibelman, Natasha Pollak, and Anthony J Olszanski<br>", "name": 26885370}, {"color": "92c5de", "ln": 15516925, "meta": "", "name": 15516925}, {"color": "f4a582", "ln": "Morel", "meta": "Title: Dendritic Cell Subsets in Type 1 Diabetes: Friend or Foe?<br>Authors: and Penelope A. Morel<br>", "name": 24367363}, {"color": "92c5de", "ln": 12161284, "meta": "", "name": 12161284}, {"color": "ca0020", "ln": "Onodera", "meta": "Title: Adipose tissue macrophages induce PPAR\u03b3-high FOXP3<br>Authors: Toshiharu Onodera, Atsunori Fukuhara, Myoung Ho Jang, Jihoon Shin, Keita Aoi, Junichi Kikuta, Michio Otsuki, Masaru Ishii, and Iichiro Shimomura<br>", "name": 26582486}, {"color": "f4a582", "ln": "Zhang", "meta": "Title: Protein expression of programmed death 1 ligand 1 and ligand 2 independently predict poor prognosis in surgically resected lung adenocarcinoma<br>Authors: Yang Zhang, Lei Wang, Yuan Li, Yunjian Pan, Rui Wang, Haichuan Hu, Hang Li, Xiaoyang Luo, Ting Ye, Yihua Sun, and Haiquan Chen<br>", "name": 24748806}, {"color": "f4a582", "ln": "Zhao", "meta": "Title: Reversal of type 1 diabetes via islet \u03b2 cell regeneration following immune modulation by cord blood-derived multipotent stem cells<br>Authors: Yong Zhao, Zhaoshun Jiang, Tingbao Zhao, Mingliang Ye, Chengjin Hu, Zhaohui Yin, Heng Li, Ye Zhang, Yalin Diao, Yunxiang Li, Yingjian Chen, Xiaoming Sun, Mary Beth Fisk, Randal Skidgel, Mark Holterman, Bellur Prabhakar, and Theodore Mazzone<br>", "name": 22233865}, {"color": "ca0020", "ln": "Hart", "meta": "Title: Anakoinosis: Communicative Reprogramming of Tumor Systems - for Rescuing from Chemorefractory Neoplasia<br>Authors: Christina Hart, Martin Vogelhuber, Daniel Wolff, Sebastian Klobuch, Lina Ghibelli, J\u00fcrgen Foell, Selim Corbacioglu, Klaus Rehe, Guy Haegeman, Simone Thomas, Wolfgang Herr, and Albrecht Reichle<br>", "name": 26259724}, {"color": "ca0020", "ln": "You", "meta": "Title: Differential Sensitivity of Regulatory and Effector T Cells to Cell Death: A Prerequisite for Transplant Tolerance<br>Authors: and Sylvaine You<br>", "name": 26042125}, {"color": "ca0020", "ln": "Scuteri", "meta": "Title: A Double Mechanism for the Mesenchymal Stem Cells' Positive Effect on Pancreatic Islets<br>Authors: Arianna Scuteri, Elisabetta Donzelli, Virginia Rodriguez-Menendez, Maddalena Ravasi, Marianna Monfrini, Barbara Bonandrini, Marina Figliuzzi, Andrea Remuzzi, and Giovanni Tredici<br>", "name": 24416216}, {"color": "ca0020", "ln": "Cobbold", "meta": "Title: Translating Tolerogenic Therapies to the Clinic \u2013 Where Do We Stand and What are the Barriers?<br>Authors: Stephen P. Cobbold, and Xian C. Li<br>", "name": 23091475}, {"color": "92c5de", "ln": 16227604, "meta": "", "name": 16227604}, {"color": "ca0020", "ln": "Bedke", "meta": "Title: Checkpoint modulation - A new way to direct the immune system against renal cell carcinoma <br>Authors: Jens Bedke, Stephan Kruck, Georgios Gakis, Arnulf Stenzl, and Peter J Goebell<br>", "name": 25912622}, {"color": "f4a582", "ln": "Brzostek", "meta": "Title: Cell Type-Specific Regulation of Immunological Synapse Dynamics by B7 Ligand Recognition<br>Authors: Joanna Brzostek, Nicholas R. J. Gascoigne, and Vasily Rybakin<br>", "name": 26870040}, {"color": "f4a582", "ln": "Mayer", "meta": "Title: Layers of dendritic cell-mediated T cell tolerance, their regulation and the prevention of autoimmunity<br>Authors: Christian T. Mayer, Luciana Berod, and Tim Sparwasser<br>", "name": 22783257}, {"color": "ca0020", "ln": "Haeryfar", "meta": "Title: Editorial: CD1- and MR1-Restricted T Cells in Antimicrobial Immunity<br>Authors: S.M. Mansour Haeryfar, and Thierry Mallevaey<br>", "name": 26697007}, {"color": "92c5de", "ln": 16382236, "meta": "", "name": 16382236}, {"color": "f4a582", "ln": "Lollini", "meta": "Title: The Promise of Preventive Cancer Vaccines<br>Authors: Pier-Luigi Lollini, Federica Cavallo, Patrizia Nanni, and Elena Quaglino<br>", "name": 26343198}, {"color": "ca0020", "ln": "Yilmazer", "meta": "Title: Development of Dual-Activity Vectors by Co-Envelopment of Adenovirus and SiRNA in Artificial Lipid Bilayers<br>Authors: A\u00e7elya Yilmazer, Bowen Tian, and Kostas Kostarelos<br>", "name": 25501573}, {"color": "ca0020", "ln": "Prendergast", "meta": "Title: CD4<br>Authors: Catriona T. Prendergast, David E. Sanin, Peter C. Cook, and Adrian P. Mountford<br>", "name": 25624353}, {"color": "92c5de", "ln": 12388130, "meta": "", "name": 12388130}, {"color": "ca0020", "ln": "Bhattacharya", "meta": "Title: Small Molecule-directed Immunotherapy against Recurrent Infection by <br>Authors: Debapriya Bhattacharya, Ved Prakash Dwivedi, Mamoudou Maiga, Mariama Maiga, Luc Van Kaer, William R. Bishai, and Gobardhan Das<br>", "name": 24711459}, {"color": "ca0020", "ln": "Loskog", "meta": "Title: Immunostimulatory Gene Therapy Using Oncolytic Viruses as Vehicles<br>Authors: and Angelica Loskog<br>", "name": 26561829}, {"color": "ca0020", "ln": "Hayashi", "meta": "Title: Induction of Tolerogenic Dendritic Cells by a PEGylated TLR7 Ligand for Treatment of Type 1 Diabetes<br>Authors: Tomoko Hayashi, Shiyin Yao, Brian Crain, Victor J. Promessi, Luke Shyu, Caroline Sheng, McNancy Kang, Howard B. Cottam, Dennis A. Carson, and Maripat Corr<br>", "name": 26076454}, {"color": "ca0020", "ln": "Munson", "meta": "Title: Exosomes: Potential in Cancer Diagnosis and Therapy<br>Authors: Phillip Munson, and Arti Shukla<br>", "name": 27088079}, {"color": "f4a582", "ln": "Wang", "meta": "Title: Negative Regulation of <br>Authors: Haopeng Wang, Henrik Flach, Michio Onizawa, Lai Wei, Michael T McManus, and Arthur Weiss<br>", "name": 24608041}, {"color": "92c5de", "ln": 12421930, "meta": "", "name": 12421930}, {"color": "f4a582", "ln": "Olino", "meta": "Title: Tumor-Associated Antigen Expressing <br>Authors: Kelly Olino, Satoshi Wada, Barish H. Edil, Xiaoyu Pan, Kristen Meckel, Walter Weber, Jill Slansky, Koji Tamada, Peter Lauer, Dirk Brockstedt, Drew Pardoll, Richard Schulick, and Kiyoshi Yoshimura<br>", "name": 21732142}, {"color": "92c5de", "ln": 16311599, "meta": "", "name": 16311599}, {"color": "ca0020", "ln": "Dong", "meta": "Title: Investigations of the functional states of dendritic cells under different conditioned microenvironments by Fourier transformed infrared spectroscopy<br>Authors: Rong Dong, Jinhua Long, Xiaoli Xu, Chunlin Zhang, Zongyao Wen, Long Li, Weijuan Yao, and Zhu Zeng<br>", "name": 24410930}, {"color": "ca0020", "ln": "Ji", "meta": "Title: PD-1/PD-L1 pathway in non-small-cell lung cancer and its relation with EGFR mutation<br>Authors: Mei Ji, Yan Liu, Qing Li, Xiao-Dong Li, Wei-Qing Zhao, Hanze Zhang, Xiaofei Zhang, Jing-Ting Jiang, and Chang-Ping Wu<br>", "name": 25592115}, {"color": "92c5de", "ln": 17950004, "meta": "", "name": 17950004}, {"color": "f4a582", "ln": "Zheng", "meta": "Title: Human Cancer Immunotherapy with PD-1/PD-L1 Blockade<br>Authors: Peilin Zheng, and Zhiguang Zhou<br>", "name": 26448693}, {"color": "ca0020", "ln": "JIN", "meta": "Title: Isobavachalcone induces the apoptosis of gastric cancer cells via inhibition of the Akt and Erk pathways<br>Authors: XIAOHONG JIN, and YI SHI<br>", "name": 26893622}, {"color": "ca0020", "ln": "ZHANG", "meta": "Title: Expression of programmed death 1 ligand 1 on periodontal tissue cells as a possible protective feedback mechanism against periodontal tissue destruction<br>Authors: JIEHUA ZHANG, CHIEH-MEI WANG, PING ZHANG, XIAOQIAN WANG, JIAO CHEN, JUN YANG, WANLU LU, WENJIE ZHOU, WENWEN YUAN, and YUN FENG<br>", "name": 26847035}, {"color": "ca0020", "ln": "Vandenberk", "meta": "Title: Exploiting the Immunogenic Potential of Cancer Cells for Improved Dendritic Cell Vaccines<br>Authors: Lien Vandenberk, Jochen Belmans, Matthias Van Woensel, Matteo Riva, and Stefaan W. Van Gool<br>", "name": 26834740}, {"color": "f4a582", "ln": "Matheu", "meta": "Title: Imaging regulatory T cell dynamics and suppression of T cell priming mediated by CTLA4<br>Authors: Melanie P. Matheu, Shivashankar Othy, Milton L. Greenberg, Tobias X. Dong, Martijn Schuijs, Kim Deswarte, Hamida Hammad, Bart N. Lambrecht, Ian Parker, and Michael D. Cahalan<br>", "name": 25653051}, {"color": "ca0020", "ln": "Hua", "meta": "Title: Pancreatic Insulin-Producing Cells Differentiated from Human Embryonic Stem Cells Correct Hyperglycemia in SCID/NOD Mice, an Animal Model of Diabetes<br>Authors: Xiu-feng Hua, Yan-wei Wang, Yu-xiao Tang, Sheng-qiang Yu, Shao-hua Jin, Xiao-mei Meng, Hua-feng Li, Fu-jun Liu, Qiang Sun, Hai-yan Wang, and Jian-yuan Li<br>", "name": 25009980}, {"color": "ca0020", "ln": "Mesples", "meta": "Title: Early immunotherapy using autologous adult stem cells reversed the effect of anti-pancreatic islets in recently diagnosed type 1 diabetes mellitus: Preliminary results<br>Authors: Alejandro Mesples, Nasir Majeed, Yun Zhang, and Xiang Hu<br>", "name": 24121994}, {"color": "ca0020", "ln": "Jiang", "meta": "Title: T-cell exhaustion in the tumor microenvironment<br>Authors: Y Jiang, Y Li, and B Zhu<br>", "name": 26086965}, {"color": "ca0020", "ln": "Vasaturo", "meta": "Title: Clinical Implications of Co-Inhibitory Molecule Expression in the Tumor Microenvironment for DC Vaccination: A Game of Stop and Go<br>Authors: Angela Vasaturo, Stefania Di Blasio, Deborah G. A. Peeters, Coco C. H. de Koning, Jolanda M. de Vries, Carl G. Figdor, and Stanleyson V. Hato<br>", "name": 24348481}, {"color": "ca0020", "ln": "Freeman", "meta": "Title: Immunotherapy in Chronic Lymphocytic Leukaemia (CLL)<br>Authors: Ciara L. Freeman, and John G. Gribben<br>", "name": 26857283}, {"color": "f4a582", "ln": "Tahara", "meta": "Title: T-bet regulates differentiation of forkhead box protein 3<br>Authors: M Tahara, Y Kondo, M Yokosawa, H Tsuboi, S Takahashi, S Shibayama, I Matsumoto, and T Sumida<br>", "name": 25219397}, {"color": "f4a582", "ln": "Carlsson", "meta": "Title: The Polyunsaturated Fatty Acids Arachidonic Acid and Docosahexaenoic Acid Induce Mouse Dendritic Cells Maturation but Reduce T-Cell Responses <br>Authors: Johan A. Carlsson, Agnes E. Wold, Ann-Sofie Sandberg, and Sofia M. \u00d6stman<br>", "name": 26619195}, {"color": "f4a582", "ln": "Dolina", "meta": "Title: Liver-primed CD8<br>Authors: Joseph S Dolina, Thomas J Braciale, and Young S Hahn<br>", "name": 24677194}, {"color": "ca0020", "ln": "Zhao", "meta": "Title: Computational Model of MicroRNA Control of HIF-VEGF Pathway: Insights into the Pathophysiology of Ischemic Vascular Disease and Cancer<br>Authors: Chen Zhao, and Aleksander S. Popel<br>", "name": 26588727}, {"color": "92c5de", "ln": 17629517, "meta": "", "name": 17629517}, {"color": "92c5de", "ln": 12415310, "meta": "", "name": 12415310}, {"color": "f4a582", "ln": "Dilek", "meta": "Title: Targeting CD28, CTLA-4 and PD-L1 Costimulation Differentially Controls Immune Synapses and Function of Human Regulatory and Conventional T-Cells<br>Authors: Nahzli Dilek, Nicolas Poirier, Philippe Hulin, Flora Coulon, Caroline Mary, Simon Ville, Henri Vie, B\u00e9atrice Cl\u00e9menceau, Gilles Blancho, and Bernard Vanhove<br>", "name": 24376655}, {"color": "ca0020", "ln": "Schlesner", "meta": "Title: Hypermutation takes the driver\u2019s seat<br>Authors: Matthias Schlesner, and Roland Eils<br>", "name": 25821521}, {"color": "ca0020", "ln": "Alzhanova", "meta": "Title: T Cell Inactivation by Poxviral B22 Family Proteins Increases Viral Virulence<br>Authors: Dina Alzhanova, Erika Hammarlund, Jason Reed, Erin Meermeier, Stephanie Rawlings, Caroline A. Ray, David M. Edwards, Ben Bimber, Alfred Legasse, Shannon Planer, Jerald Sprague, Michael K. Axthelm, David J. Pickup, David M. Lewinsohn, Marielle C. Gold, Scott W. Wong, Jonah B. Sacha, Mark K. Slifka, and Klaus Fr\u00fch<br>", "name": 24832205}, {"color": "ca0020", "ln": "Chang", "meta": "Title: Anti-CCR4 monoclonal antibody enhances antitumor immunity by modulating tumor-infiltrating Tregs in an ovarian cancer xenograft humanized mouse model <br>Authors: De-Kuan Chang, Eric Peterson, Jiusong Sun, Calum Goudie, Ronny I. Drapkin, Joyce F. Liu, Ursula Matulonis, Quan Zhu, and Wayne A. Marasco<br>", "name": 27141347}, {"color": "ca0020", "ln": "Cai", "meta": "Title: Maximum Efficacy of Mesenchymal Stem Cells in Rat Model of Renal Ischemia-Reperfusion Injury: Renal Artery Administration with Optimal Numbers<br>Authors: Jieru Cai, Xiaofang Yu, Rende Xu, Yi Fang, Xiaoqin Qian, Shaopeng Liu, jie Teng, and Xiaoqiang Ding<br>", "name": 24637784}, {"color": "ca0020", "ln": "Pionnier", "meta": "Title: Neutropenic Mice Provide Insight into the Role of Skin-Infiltrating Neutrophils in the Host Protective Immunity against Filarial Infective Larvae<br>Authors: Nicolas Pionnier, Emilie Brotin, Gregory Karadjian, Patrice Hemon, Fran\u00e7oise Gaudin-Nom\u00e9, Nathaly Vallarino-Lhermitte, Ad\u00e9la\u00efde Nieguitsila, Fr\u00e9d\u00e9ric Fercoq, Marie-Laure Aknin, Viviana Marin-Esteban, Sylvie Chollet-Martin, G\u00e9raldine Schlecht-Louf, Fran\u00e7oise Bachelerie, and Coralie Martin<br>", "name": 27111140}, {"color": "ca0020", "ln": "Chae", "meta": "Title: Adenoid cystic carcinoma: current therapy and potential therapeutic advances based on genomic profiling<br>Authors: Young Kwang Chae, Su Yun Chung, Andrew A. Davis, Benedito A. Carneiro, Sunandana Chandra, Jason Kaplan, Aparna Kalyan, and Francis J. Giles<br>", "name": 26359351}, {"color": "ca0020", "ln": "Cyktor", "meta": "Title: Clonal Expansions of CD8<br>Authors: Joshua C. Cyktor, Bridget Carruthers, Gillian L. Beamer, and Joanne Turner<br>", "name": 23472214}, {"color": "f4a582", "ln": "Liu", "meta": "Title: A Promoter Region Polymorphism in <br>Authors: CuiPing Liu, JueAn Jiang, Li Gao, XiaoHan Hu, FengMing Wang, Yu Shen, GeHua Yu, ZuoTao Zhao, and XueGuang Zhang<br>", "name": 24804191}, {"color": "f4a582", "ln": "Gonz\u00e1lez", "meta": "Title: Modulation of Tumor Immunity by Soluble and Membrane-Bound Molecules at the Immunological Synapse<br>Authors: Pablo A. Gonz\u00e1lez, Leandro J. Carre\u00f1o, Pablo F. C\u00e9spedes, Susan M. Bueno, Claudia A. Riedel, and Alexis M. Kalergis<br>", "name": 23533456}, {"color": "ca0020", "ln": "Liu", "meta": "Title: CdSe/ZnS Quantum Dots-Labeled Mesenchymal Stem Cells for Targeted Fluorescence Imaging of Pancreas Tissues and Therapy of Type 1 Diabetic Rats<br>Authors: Haoqi Liu, Wei Tang, Chao Li, Pinlei Lv, Zheng Wang, Yanlei Liu, Cunlei Zhang, Yi Bao, Haiyan Chen, Xiangying Meng, Yan Song, Xiaoling Xia, Fei Pan, Daxiang Cui, and Yongquan Shi<br>", "name": 26078050}, {"color": "92c5de", "ln": 9796923, "meta": "", "name": 9796923}, {"color": "ca0020", "ln": "Ameratunga", "meta": "Title: PD-L1 and Tumor Infiltrating Lymphocytes as Prognostic Markers in Resected NSCLC<br>Authors: Malaka Ameratunga, Khashayar Asadi, Xihui Lin, Marzena Walkiewicz, Carmel Murone, Simon Knight, Paul Mitchell, Paul Boutros, and Thomas John<br>", "name": 27104612}, {"color": "ca0020", "ln": "Shuai", "meta": "Title: Adaptive immunity in the liver<br>Authors: Zongwen Shuai, Miranda WY Leung, Xiaosong He, Weici Zhang, Guoxiang Yang, Patrick SC Leung, and M Eric Gershwin<br>", "name": 26996069}, {"color": "ca0020", "ln": "Horst", "meta": "Title: Modulation of liver tolerance by conventional and nonconventional antigen-presenting cells and regulatory immune cells<br>Authors: Andrea Kristina Horst, Katrin Neumann, Linda Diehl, and Gisa Tiegs<br>", "name": 27041638}, {"color": "92c5de", "ln": 7482727, "meta": "", "name": 7482727}, {"color": "ca0020", "ln": "Ribeiro", "meta": "Title: Five Layers of Receptor Signaling in \u03b3\u03b4 T-Cell Differentiation and Activation<br>Authors: S\u00e9rgio T. Ribeiro, Julie C. Ribot, and Bruno Silva-Santos<br>", "name": 25674089}, {"color": "f4a582", "ln": "Pauken", "meta": "Title: PD-1, but Not PD-L1, Expressed by Islet-Reactive CD4<br>Authors: Kristen E. Pauken, Marc K. Jenkins, Miyuki Azuma, and Brian T. Fife<br>", "name": 23545706}, {"color": "ca0020", "ln": "Riccardi", "meta": "Title: MiR-210 promotes sensory hair cell formation in the organ of corti<br>Authors: Sabrina Riccardi, Sebastian Bergling, Frederic Sigoillot, Martin Beibel, Annick Werner, Juliet Leighton-Davies, Judith Knehr, Tewis Bouwmeester, Christian N. Parker, Guglielmo Roma, and Bernd Kinzel<br>", "name": 27121005}, {"color": "92c5de", "ln": 15543150, "meta": "", "name": 15543150}, {"color": "92c5de", "ln": 10694513, "meta": "", "name": 10694513}, {"color": "ca0020", "ln": "Hu", "meta": "Title: Ubiquitin signaling in immune responses<br>Authors: Hongbo Hu, and Shao-Cong Sun<br>", "name": 27012466}, {"color": "ca0020", "ln": "Uusi-Kerttula", "meta": "Title: Oncolytic Adenovirus: Strategies and Insights for Vector Design and Immuno-Oncolytic Applications<br>Authors: Hanni Uusi-Kerttula, Sarah Hulin-Curtis, James Davies, and Alan L. Parker<br>", "name": 26610547}, {"color": "92c5de", "ln": 14713717, "meta": "", "name": 14713717}, {"color": "92c5de", "ln": 15240681, "meta": "", "name": 15240681}, {"color": "f4a582", "ln": "Kong", "meta": "Title: Opportunistic Autoimmune Disorders Potentiated by Immune-Checkpoint Inhibitors Anti-CTLA-4 and Anti-PD-1<br>Authors: Yi-chi M. Kong, and Jeffrey C. Flynn<br>", "name": 24904570}, {"color": "ca0020", "ln": "Liesz", "meta": "Title: Editorial: Mechanisms of neuroinflammation and inflammatory neurodegeneration in acute brain injury<br>Authors: Arthur Liesz, and Christoph Kleinschnitz<br>", "name": 26300735}, {"color": "ca0020", "ln": "Barrio", "meta": "Title: Editorial: \u201cCancer Immunotherapy: Lights and Shadows\u201d<br>Authors: Mar\u00eda Marcela Barrio, Estrella Mariel Levy, and Jos\u00e9 Mordoh<br>", "name": 26217342}, {"color": "f4a582", "ln": "Dolina", "meta": "Title: Lipidoid Nanoparticles Containing PD-L1 siRNA Delivered <br>Authors: Joseph S Dolina, Sun-Sang J Sung, Tatiana I Novobrantseva, Tuyen M Nguyen, and Young S Hahn<br>", "name": 23423360}, {"color": "ca0020", "ln": "Pozzobon", "meta": "Title: Fetal Stem Cells and Skeletal Muscle Regeneration: A Therapeutic Approach<br>Authors: Michela Pozzobon, Chiara Franzin, Martina Piccoli, and Paolo De Coppi<br>", "name": 25221507}, {"color": "ca0020", "ln": "Pileggi", "meta": "Title: Mesenchymal Stem Cells for the Treatment of Diabetes<br>Authors: and Antonello Pileggi<br>", "name": 22618774}, {"color": "ca0020", "ln": "Stoll", "meta": "Title: Impact of smoking on dendritic cell phenotypes in the airway lumen of patients with COPD<br>Authors: Paul Stoll, Ann-Sophie Heinz, Kai Bratke, Andrea Bier, Katharina Garbe, Michael Kuepper, J Christian Virchow, and Marek Lommatzsch<br>", "name": 24742278}, {"color": "ca0020", "ln": "El-Badawy", "meta": "Title: Clinical Efficacy of Stem Cell Therapy for Diabetes Mellitus: A Meta-Analysis<br>Authors: Ahmed El-Badawy, and Nagwa El-Badri<br>", "name": 27073927}, {"color": "92c5de", "ln": 16931720, "meta": "", "name": 16931720}, {"color": "ca0020", "ln": "van de Laar", "meta": "Title: Cytoreductive surgery followed by chemotherapy versus chemotherapy alone for recurrent platinum-sensitive epithelial ovarian cancer (SOCceR trial): a multicenter randomised controlled study<br>Authors: Rafli van de Laar, Petra LM Zusterzeel, Toon Van Gorp, Marrije R Buist, Willemien J van Driel, Katja N Gaarenstroom, Henriette JG Arts, Johannes CM van Huisseling, Ralph HM Hermans, Johanna MA Pijnenborg, Eltjo MJ Schutter, Harold MP Pelikan, Jos HA Vollebergh, Mirjam JA Engelen, Joanna IntHout, Roy FPM Kruitwagen, and Leon FAG Massuger<br>", "name": 24422892}, {"color": "ca0020", "ln": "Hopp", "meta": "Title: Self-Antigen Presentation by Dendritic Cells in Autoimmunity<br>Authors: Ann-Katrin Hopp, Anne Rupp, and Veronika Lukacs-Kornek<br>", "name": 24592266}, {"color": "ca0020", "ln": "Tongu", "meta": "Title: Intermittent chemotherapy can retain the therapeutic potential of anti-CD137 antibody during the late tumor-bearing state<br>Authors: Miki Tongu, Nanae Harashima, Koji Tamada, Lieping Chen, and Mamoru Harada<br>", "name": 25363339}, {"color": "ca0020", "ln": "Seymour", "meta": "Title: Oncolytic viruses: finally delivering<br>Authors: Leonard W Seymour, and Kerry D Fisher<br>", "name": 26766734}, {"color": "92c5de", "ln": 12086671, "meta": "", "name": 12086671}, {"color": "92c5de", "ln": 7584144, "meta": "", "name": 7584144}, {"color": "f4a582", "ln": "LU", "meta": "Title: Inflammation promotes oral squamous carcinoma immune evasion via induced programmed death ligand-1 surface expression<br>Authors: WANLU LU, LIBING LU, YUN FENG, JIAO CHEN, YAN LI, XIANGLI KONG, SIXIU CHEN, XIAOYU LI, QIANMING CHEN, and PING ZHANG<br>", "name": 23761816}, {"color": "f4a582", "ln": "Delovitch", "meta": "Title: Imaging of NKT Cell Recirculation and Tissue Migration during Antimicrobial Immunity<br>Authors: and Terry L. Delovitch<br>", "name": 26236312}, {"color": "92c5de", "ln": 16774041, "meta": "", "name": 16774041}, {"color": "f4a582", "ln": "Ridder", "meta": "Title: Extracellular vesicle-mediated transfer of functional RNA in the tumor microenvironment<br>Authors: Kirsten Ridder, Alexandra Sevko, Janina Heide, Maria Dams, Anne-Kathleen Rupp, Jadranka Macas, Julia Starmann, Marc Tjwa, Karl H Plate, Holger S\u00fcltmann, Peter Altevogt, Viktor Umansky, and Stefan Momma<br>", "name": 26155418}, {"color": "ca0020", "ln": "Berclaz", "meta": "Title: Combined Optical Coherence and Fluorescence Microscopy to assess dynamics and specificity of pancreatic beta-cell tracers<br>Authors: Corinne Berclaz, Christophe Pache, Arno Bouwens, Daniel Szlag, Antonio Lopez, Lieke Joosten, Selen Ekim, Maarten Brom, Martin Gotthardt, Anne Grapin-Botton, and Theo Lasser<br>", "name": 25988507}, {"color": "ca0020", "ln": "Zhong", "meta": "Title: Prognostic value of programmed cell death-ligand 1 expression in patients with non-small-cell lung cancer: evidence from an updated meta-analysis<br>Authors: Anyuan Zhong, Yufei Xing, Xue Pan, Minhua Shi, and Huajun Xu<br>", "name": 26664143}, {"color": "ca0020", "ln": "R\u00fcckerl", "meta": "Title: Macrophage proliferation, provenance, and plasticity in macroparasite infection<br>Authors: Dominik R\u00fcckerl, and Judith E Allen<br>", "name": 25319331}, {"color": "ca0020", "ln": "Weir", "meta": "Title: Stem cell approaches for diabetes: towards beta cell replacement<br>Authors: Gordon C Weir, Claudia Cavelti-Weder, and Susan Bonner-Weir<br>", "name": 21951399}, {"color": "ca0020", "ln": "Ferrand", "meta": "Title: Serotype-specific Binding Properties and Nanoparticle Characteristics Contribute to the Immunogenicity of rAAV1 Vectors<br>Authors: Maxime Ferrand, Sylvie Da Rocha, Guillaume Corre, Anne Galy, and Florence Boisgerault<br>", "name": 25881000}, {"color": "ca0020", "ln": "Unger", "meta": "Title: Antigen targeting to dendritic cells combined with transient regulatory T cell inhibition results in long-term tumor regression <br>Authors: Wendy WJ Unger, Christian T Mayer, Steef Engels, Christina Hesse, Maurizio Perdicchio, Franz Puttur, Ingeborg Streng-Ouwehand, Manja Litjens, Hakan Kalay, Luciana Berod, Tim Sparwasser, and Yvette van Kooyk<br>", "name": 26405564}, {"color": "ca0020", "ln": "Onesti", "meta": "Title: Improvement of Mouth Functional Disability in Systemic Sclerosis Patients over One Year in a Trial of Fat Transplantation versus Adipose-Derived Stromal Cells<br>Authors: Maria Giuseppina Onesti, Paolo Fioramonti, Sara Carella, Pasquale Fino, Cinzia Marchese, and Nicol\u00f2 Scuderi<br>", "name": 26880939}, {"color": "92c5de", "ln": 15924144, "meta": "", "name": 15924144}, {"color": "92c5de", "ln": 8671666, "meta": "", "name": 8671666}, {"color": "f4a582", "ln": "Saeed", "meta": "Title: Targeting melanoma with immunoliposomes coupled to anti-MAGE A1 TCR-like single-chain antibody<br>Authors: Mesha Saeed, Mandy van Brakel, Sara Zalba, Erik Schooten, Joost AP Rens, Gerben A Koning, Reno Debets, and Timo LM ten Hagen<br>", "name": 27022262}, {"color": "f4a582", "ln": "Aranda", "meta": "Title: Trial Watch<br>Authors: Fernando Aranda, Erika Vacchelli, Alexander Eggermont, Jerome Galon, Wolf Herv\u00e9 Fridman, Laurence Zitvogel, Guido Kroemer, and Lorenzo Galluzzi<br>", "name": 24701370}, {"color": "92c5de", "ln": 7882171, "meta": "", "name": 7882171}, {"color": "ca0020", "ln": "Yang", "meta": "Title: Systemic Transplantation of Human Umbilical Cord Derived Mesenchymal Stem Cells-Educated T Regulatory Cells Improved the Impaired Cognition in A\u03b2PPswe/PS1dE9 Transgenic Mice<br>Authors: Hongna Yang, Hui Yang, Zhaohong Xie, Lifei Wei, and Jianzhong Bi<br>", "name": 23935936}, {"color": "92c5de", "ln": 8402882, "meta": "", "name": 8402882}, {"color": "92c5de", "ln": 11145667, "meta": "", "name": 11145667}, {"color": "ca0020", "ln": "Li", "meta": "Title: Hypoxia-inducible miR-182 enhances HIF1\u03b1 signaling via targeting PHD2 and FIH1 in prostate cancer<br>Authors: Yan Li, Duo Zhang, Xiaoyun Wang, Xuan Yao, Cheng Ye, Shengjie Zhang, Hui Wang, Cunjie Chang, Hongfeng Xia, Yu-cheng Wang, Jing Fang, Jun Yan, and Hao Ying<br>", "name": 26205124}, {"color": "ca0020", "ln": "Yan", "meta": "Title: Elevation of Circulating miR-210-3p in High-Altitude Hypoxic Environment<br>Authors: Yan Yan, Cheng Wang, Wanqing Zhou, Yonghui Shi, Pengtao Guo, Yuxiu Liu, Junjun Wang, Chen-Yu Zhang, and Chunni Zhang<br>", "name": 27014085}, {"color": "ca0020", "ln": "Li", "meta": "Title: Hair regrowth in alopecia areata patients following Stem Cell Educator therapy<br>Authors: Yanjia Li, Baoyong Yan, Hepeng Wang, Heng Li, Quanhai Li, Dong Zhao, Yana Chen, Ye Zhang, Wenxia Li, Jun Zhang, Shanfeng Wang, Jie Shen, Yunxiang Li, Edward Guindi, and Yong Zhao<br>", "name": 25896390}, {"color": "ca0020", "ln": "Schirrmacher", "meta": "Title: Harnessing Oncolytic Virus-Mediated Anti-Tumor Immunity<br>Authors: Volker Schirrmacher, and Philippe Fournier<br>", "name": 25505735}, {"color": "92c5de", "ln": 8630728, "meta": "", "name": 8630728}, {"color": "ca0020", "ln": "Ng", "meta": "Title: Influence of molecular genetics in Vogt-Koyanagi-Harada disease<br>Authors: Joanne YW Ng, Fiona OJ Luk, Timothy YY Lai, and Chi-Pui Pang<br>", "name": 25097674}, {"color": "ca0020", "ln": "Tripathi", "meta": "Title: Transcriptional and epigenetic regulation of T-helper lineage\nspecification<br>Authors: Subhash K Tripathi, and Riitta Lahesmaa<br>", "name": 25123277}, {"color": "92c5de", "ln": 16606670, "meta": "", "name": 16606670}, {"color": "ca0020", "ln": "Kocoglu", "meta": "Title: The Role of Immunotherapy in Multiple Myeloma<br>Authors: Mehmet Kocoglu, and Ashraf Badros<br>", "name": 26784207}, {"color": "ca0020", "ln": "Yaochite", "meta": "Title: Multipotent mesenchymal stromal cells from patients with newly diagnosed type 1 diabetes mellitus exhibit preserved in vitro and in vivo immunomodulatory properties<br>Authors: Juliana Navarro Ueda Yaochite, Kalil Willian Alves de Lima, Carolina Caliari-Oliveira, Patricia Vianna Bonini Palma, Carlos Eduardo Barra Couri, Belinda Pinto Sim\u00f5es, Dimas Tadeu Covas, J\u00falio C\u00e9sar Voltarelli, Maria Carolina Oliveira, Eduardo Ant\u00f4nio Donadi, and Kelen Cristina Ribeiro Malmegrim<br>", "name": 26781648}, {"color": "92c5de", "ln": 14712275, "meta": "", "name": 14712275}, {"color": "ca0020", "ln": "Price", "meta": "Title: The Role of Dendritic Cell Subsets and Innate Immunity in the Pathogenesis of Type 1 Diabetes and Other Autoimmune Diseases<br>Authors: Jeffrey D. Price, and Kristin V. Tarbell<br>", "name": 26124756}, {"color": "f4a582", "ln": "Coppieters", "meta": "Title: A Novel Technique for the <br>Authors: Ken Coppieters, Marianne M. Martinic, William B. Kiosses, Natalie Amirian, and Matthias von Herrath<br>", "name": 21203413}, {"color": "ca0020", "ln": "Fucikova", "meta": "Title: Prognostic and Predictive Value of DAMPs and DAMP-Associated Processes in Cancer<br>Authors: Jitka Fucikova, Irena Moserova, Linda Urbanova, Lucillia Bezu, Oliver Kepp, Isabelle Cremer, Cyril Salek, Pavel Strnad, Guido Kroemer, Lorenzo Galluzzi, and Radek Spisek<br>", "name": 26300886}, {"color": "f4a582", "ln": "Nassef Kadry Naguib Roufaiel", "meta": "Title: Impaired T-Cell Function in B-Cell Lymphoma: A Direct Consequence of Events at the Immunological Synapse?<br>Authors: Marian Nassef Kadry Naguib Roufaiel, James W. Wells, and Raymond J. Steptoe<br>", "name": 26082776}, {"color": "ca0020", "ln": "Vandenberk", "meta": "Title: Irradiation of necrotic cancer cells, employed for pulsing dendritic cells (DCs), potentiates DC vaccine-induced antitumor immunity against high-grade glioma<br>Authors: Lien Vandenberk, Abhishek D. Garg, Tina Verschuere, Carolien Koks, Jochen Belmans, Monique Beullens, Patrizia Agostinis, Steven De Vleeschouwer, and Stefaan W. Van Gool<br>", "name": 27057467}, {"color": "f4a582", "ln": "Datta", "meta": "Title: Rationale for a Multimodality Strategy to Enhance the Efficacy of Dendritic Cell-Based Cancer Immunotherapy<br>Authors: Jashodeep Datta, Erik Berk, Jessica A. Cintolo, Shuwen Xu, Robert E. Roses, and Brian J. Czerniecki<br>", "name": 26082780}, {"color": "92c5de", "ln": 15357946, "meta": "", "name": 15357946}, {"color": "ca0020", "ln": "Barnes", "meta": "Title: Endocrinopathies in Survivors of Childhood Neoplasia<br>Authors: Nicole Barnes, and Wassim Chemaitilly<br>", "name": 25295241}, {"color": "ca0020", "ln": "Mentlik James", "meta": "Title: Combination Immune Therapies to Enhance Anti-Tumor Responses by NK Cells<br>Authors: Ashley Mentlik James, Adam D. Cohen, and Kerry S. Campbell<br>", "name": 24391651}, {"color": "f7f7f7", "ln": "Fife", "meta": "Title: Interactions between programmed death-1 and programmed death ligand-1 promote tolerance by blocking the T cell receptor-induced stop signal<br>Authors: Brian T. Fife, Kristen E. Pauken, Todd N. Eagar, Takashi Obu, Jenny Wu, Qizhi Tang, Miyuki Azuma, Matthew F. Krummel, and Jeffrey A. Bluestone<br>", "name": "19783989"}, {"color": "92c5de", "ln": 16952297, "meta": "", "name": 16952297}, {"color": "ca0020", "ln": "Perri", "meta": "Title: Expression of PD-1 Molecule on Regulatory T Lymphocytes in Patients with Insulin-Dependent Diabetes Mellitus<br>Authors: Valentina Perri, Benedetta Russo, Antonino Crin\u00f2, Riccardo Schiaffini, Ezio Giorda, Marco Cappa, Maria Manuela Rosado, and Alessandra Fierabracci<br>", "name": 26393578}, {"color": "ca0020", "ln": "Chen", "meta": "Title: Immunomodulatory properties of human adult and fetal multipotent mesenchymal stem cells<br>Authors: Pei-Min Chen, Men-Luh Yen, Ko-Jiunn Liu, Huey-Kang Sytwu, and B-Linju  Yen<br>", "name": 21762539}, {"color": "92c5de", "ln": 12515820, "meta": "", "name": 12515820}, {"color": "f4a582", "ln": "Galluzzi", "meta": "Title: Classification of current anticancer immunotherapies<br>Authors: Lorenzo Galluzzi, Erika Vacchelli, Jos\u00e9-Manuel Bravo-San Pedro, Aitziber Buqu\u00e9, Laura Senovilla, Elisa Elena Baracco, Norma Bloy, Francesca Castoldi, Jean-Pierre Abastado, Patrizia Agostinis, Ron N. Apte, Fernando Aranda, Maha Ayyoub, Philipp Beckhove, Jean-Yves Blay, Laura Bracci, Anne Caignard, Chiara Castelli, Federica Cavallo, Estaban Celis, Vincenzo Cerundolo, Aled Clayton, Mario P. Colombo, Lisa Coussens, Madhav V. Dhodapkar, Alexander M. Eggermont, Douglas T. Fearon, Wolf H. Fridman, Jitka Fu\u010d\u00edkov\u00e1, Dmitry I. Gabrilovich, J\u00e9r\u00f4me Galon, Abhishek Garg, Fran\u00e7ois Ghiringhelli, Giuseppe Giaccone, Eli Gilboa, Sacha Gnjatic, Axel Hoos, Anne Hosmalin, Dirk J\u00e4ger, Pawel Kalinski, Klas K\u00e4rre, Oliver Kepp, Rolf Kiessling, John M. Kirkwood, Eva Klein, Alexander Knuth, Claire E. Lewis, Roland Liblau, Michael T. Lotze, Enrico Lugli, Jean-Pierre Mach, Fabrizio Mattei, Domenico Mavilio, Ignacio Melero, Cornelis J. Melief, Elizabeth A. Mittendorf, Lorenzo Moretta, Adekunke Odunsi, Hideho Okada, Anna Karolina Palucka, Marcus E. Peter, Kenneth J. Pienta, Angel Porgador, George C. Prendergast, Gabriel A. Rabinovich, Nicholas P. Restifo, Naiyer Rizvi, Catherine Saut\u00e8s-Fridman, Hans Schreiber, Barbara Seliger, Hiroshi Shiku, Bruno Silva-Santos, Mark J. Smyth, Daniel E. Speiser, Radek Spisek, Pramod K. Srivastava, James E. Talmadge, Eric Tartour, Sjoerd H. Van Der Burg, Beno\u00eet J. Van Den Eynde, Richard Vile, Hermann Wagner, Jeffrey S. Weber, Theresa L. Whiteside, Jedd D. Wolchok, Laurence Zitvogel, Weiping Zou, and Guido Kroemer<br>", "name": 25537519}, {"color": "ca0020", "ln": "Zamarin", "meta": "Title: Potentiation of immunomodulatory antibody therapy with oncolytic viruses for treatment of cancer<br>Authors: Dmitriy Zamarin, and Jedd D Wolchok<br>", "name": 27119094}, {"color": "92c5de", "ln": 15357943, "meta": "", "name": 15357943}, {"color": "ca0020", "ln": "Kim", "meta": "Title: Extracellular Release of CD11b by TLR9 Stimulation in Macrophages<br>Authors: Dongbum Kim, Te Ha Kim, Guang Wu, Byoung Kwon Park, Ji-Hee Ha, Yong-Sung Kim, Keunwook Lee, Younghee Lee, and Hyung-Joo Kwon<br>", "name": 26954233}, {"color": "92c5de", "ln": 18275834, "meta": "", "name": 18275834}, {"color": "ca0020", "ln": "Wu", "meta": "Title: Risk Factors Contributing to Type 2 Diabetes and Recent Advances in the Treatment and Prevention<br>Authors: Yanling Wu, Yanping Ding, Yoshimasa Tanaka, and Wen Zhang<br>", "name": 25249787}, {"color": "ca0020", "ln": "Zhang", "meta": "Title: Prognostic Significance of Programmed Cell Death 1 (PD-1) or PD-1 Ligand 1 (PD-L1) Expression in Epithelial-Originated Cancer<br>Authors: Yaxiong Zhang, Shiyang Kang, Jianfei Shen, Jiaxi He, Long Jiang, Wei Wang, Zhihua Guo, Guilin Peng, Gang Chen, Jianxing He, and Wenhua Liang<br>", "name": 25674748}, {"color": "f4a582", "ln": "Mackern-Oberti", "meta": "Title: Targeting Dendritic Cell Function during Systemic Autoimmunity to Restore Tolerance<br>Authors: Juan P. Mackern-Oberti, Fabi\u00e1n Vega, Carolina Llanos, Susan M. Bueno, and Alexis M. Kalergis<br>", "name": 25229821}], "links": [{"source": 0, "target": 189}, {"source": 1, "target": 78}, {"source": 2, "target": 107}, {"source": 3, "target": 107}, {"source": 4, "target": 126}, {"source": 5, "target": 203}, {"source": 6, "target": 228}, {"source": 7, "target": 228}, {"source": 8, "target": 224}, {"source": 9, "target": 233}, {"source": 11, "target": 126}, {"source": 12, "target": 228}, {"source": 14, "target": 233}, {"source": 15, "target": 55}, {"source": 16, "target": 220}, {"source": 17, "target": 126}, {"source": 18, "target": 115}, {"source": 19, "target": 55}, {"source": 20, "target": 126}, {"source": 21, "target": 55}, {"source": 22, "target": 233}, {"source": 23, "target": 106}, {"source": 24, "target": 6}, {"source": 26, "target": 174}, {"source": 27, "target": 89}, {"source": 29, "target": 203}, {"source": 30, "target": 55}, {"source": 32, "target": 233}, {"source": 33, "target": 67}, {"source": 34, "target": 55}, {"source": 35, "target": 126}, {"source": 36, "target": 228}, {"source": 37, "target": 94}, {"source": 38, "target": 228}, {"source": 39, "target": 203}, {"source": 40, "target": 12}, {"source": 41, "target": 174}, {"source": 42, "target": 220}, {"source": 43, "target": 228}, {"source": 45, "target": 36}, {"source": 46, "target": 203}, {"source": 47, "target": 177}, {"source": 49, "target": 228}, {"source": 52, "target": 233}, {"source": 53, "target": 189}, {"source": 55, "target": 228}, {"source": 56, "target": 149}, {"source": 57, "target": 107}, {"source": 58, "target": 233}, {"source": 59, "target": 55}, {"source": 61, "target": 233}, {"source": 63, "target": 203}, {"source": 65, "target": 55}, {"source": 66, "target": 12}, {"source": 67, "target": 228}, {"source": 68, "target": 228}, {"source": 69, "target": 228}, {"source": 70, "target": 233}, {"source": 71, "target": 240}, {"source": 72, "target": 192}, {"source": 73, "target": 228}, {"source": 74, "target": 137}, {"source": 75, "target": 115}, {"source": 76, "target": 192}, {"source": 77, "target": 228}, {"source": 78, "target": 228}, {"source": 79, "target": 233}, {"source": 80, "target": 89}, {"source": 81, "target": 228}, {"source": 82, "target": 55}, {"source": 83, "target": 126}, {"source": 84, "target": 128}, {"source": 85, "target": 233}, {"source": 86, "target": 38}, {"source": 87, "target": 107}, {"source": 88, "target": 220}, {"source": 89, "target": 228}, {"source": 90, "target": 107}, {"source": 91, "target": 55}, {"source": 92, "target": 149}, {"source": 93, "target": 38}, {"source": 94, "target": 228}, {"source": 96, "target": 203}, {"source": 97, "target": 103}, {"source": 98, "target": 12}, {"source": 100, "target": 228}, {"source": 101, "target": 174}, {"source": 103, "target": 228}, {"source": 105, "target": 137}, {"source": 106, "target": 228}, {"source": 107, "target": 228}, {"source": 108, "target": 233}, {"source": 109, "target": 149}, {"source": 110, "target": 55}, {"source": 111, "target": 6}, {"source": 113, "target": 203}, {"source": 114, "target": 228}, {"source": 115, "target": 228}, {"source": 116, "target": 190}, {"source": 118, "target": 228}, {"source": 119, "target": 38}, {"source": 120, "target": 78}, {"source": 122, "target": 78}, {"source": 123, "target": 36}, {"source": 124, "target": 240}, {"source": 125, "target": 192}, {"source": 126, "target": 228}, {"source": 128, "target": 228}, {"source": 130, "target": 36}, {"source": 131, "target": 106}, {"source": 133, "target": 228}, {"source": 134, "target": 203}, {"source": 135, "target": 189}, {"source": 136, "target": 224}, {"source": 137, "target": 228}, {"source": 138, "target": 55}, {"source": 139, "target": 107}, {"source": 140, "target": 106}, {"source": 141, "target": 36}, {"source": 142, "target": 233}, {"source": 143, "target": 228}, {"source": 144, "target": 228}, {"source": 145, "target": 228}, {"source": 146, "target": 126}, {"source": 149, "target": 228}, {"source": 150, "target": 233}, {"source": 151, "target": 6}, {"source": 152, "target": 149}, {"source": 153, "target": 55}, {"source": 154, "target": 78}, {"source": 155, "target": 68}, {"source": 156, "target": 12}, {"source": 157, "target": 228}, {"source": 158, "target": 228}, {"source": 159, "target": 55}, {"source": 161, "target": 106}, {"source": 162, "target": 145}, {"source": 163, "target": 177}, {"source": 165, "target": 6}, {"source": 166, "target": 228}, {"source": 167, "target": 126}, {"source": 170, "target": 115}, {"source": 171, "target": 38}, {"source": 174, "target": 228}, {"source": 175, "target": 77}, {"source": 176, "target": 68}, {"source": 177, "target": 228}, {"source": 178, "target": 107}, {"source": 179, "target": 55}, {"source": 180, "target": 36}, {"source": 181, "target": 107}, {"source": 183, "target": 128}, {"source": 184, "target": 115}, {"source": 185, "target": 203}, {"source": 186, "target": 38}, {"source": 189, "target": 228}, {"source": 190, "target": 228}, {"source": 192, "target": 228}, {"source": 193, "target": 220}, {"source": 194, "target": 106}, {"source": 195, "target": 78}, {"source": 196, "target": 55}, {"source": 197, "target": 36}, {"source": 198, "target": 115}, {"source": 199, "target": 55}, {"source": 202, "target": 228}, {"source": 203, "target": 228}, {"source": 205, "target": 107}, {"source": 208, "target": 126}, {"source": 209, "target": 126}, {"source": 210, "target": 107}, {"source": 211, "target": 38}, {"source": 213, "target": 157}, {"source": 214, "target": 126}, {"source": 216, "target": 233}, {"source": 217, "target": 55}, {"source": 219, "target": 103}, {"source": 220, "target": 228}, {"source": 221, "target": 233}, {"source": 222, "target": 228}, {"source": 223, "target": 233}, {"source": 224, "target": 228}, {"source": 226, "target": 174}, {"source": 227, "target": 177}, {"source": 228, "target": 104}, {"source": 228, "target": 182}, {"source": 228, "target": 54}, {"source": 228, "target": 187}, {"source": 228, "target": 188}, {"source": 228, "target": 112}, {"source": 228, "target": 44}, {"source": 228, "target": 60}, {"source": 228, "target": 62}, {"source": 228, "target": 191}, {"source": 228, "target": 129}, {"source": 228, "target": 117}, {"source": 228, "target": 13}, {"source": 228, "target": 121}, {"source": 228, "target": 64}, {"source": 228, "target": 127}, {"source": 228, "target": 10}, {"source": 228, "target": 200}, {"source": 228, "target": 201}, {"source": 228, "target": 132}, {"source": 228, "target": 204}, {"source": 228, "target": 25}, {"source": 228, "target": 206}, {"source": 228, "target": 207}, {"source": 228, "target": 168}, {"source": 228, "target": 212}, {"source": 228, "target": 28}, {"source": 228, "target": 147}, {"source": 228, "target": 215}, {"source": 228, "target": 31}, {"source": 228, "target": 218}, {"source": 228, "target": 148}, {"source": 228, "target": 237}, {"source": 228, "target": 160}, {"source": 228, "target": 164}, {"source": 228, "target": 229}, {"source": 228, "target": 48}, {"source": 228, "target": 232}, {"source": 228, "target": 95}, {"source": 228, "target": 51}, {"source": 228, "target": 169}, {"source": 228, "target": 173}, {"source": 228, "target": 172}, {"source": 228, "target": 99}, {"source": 228, "target": 235}, {"source": 228, "target": 225}, {"source": 228, "target": 50}, {"source": 228, "target": 102}, {"source": 230, "target": 166}, {"source": 231, "target": 55}, {"source": 233, "target": 228}, {"source": 234, "target": 38}, {"source": 236, "target": 192}, {"source": 238, "target": 107}, {"source": 239, "target": 106}, {"source": 240, "target": 228}], "multigraph": false}
-        }
-		</script>
+    <!-- Theme JavaScript -->
+    <script src="js/creative.min.js"></script>
 
 </body>
 
