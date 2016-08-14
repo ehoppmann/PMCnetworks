@@ -2,4 +2,3 @@
 
 - [View the project website for more information](http://citationexplorer.hoppmann.me/)
   - [Or skip straight to the live demo](http://app.citationexplorer.hoppmann.me/) 
-- In case the live demo is down for whatever reason, the project site has a pre-rendered example
